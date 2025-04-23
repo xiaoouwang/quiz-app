@@ -713,78 +713,153 @@ h2 i {
   border-color: var(--error-color);
 }
 
-/* Answer Details Styles */
+/* Answer details styling - enhanced design */
 .answer-details {
-  margin: 0.75rem 0;
-  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .answer-content {
-  background-color: var(--background-color);
-  border-radius: var(--border-radius);
   padding: 1.5rem;
-  border-left: 4px solid var(--primary-color);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  margin-left: 20px;
   position: relative;
 }
 
-.answer-content::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: 20px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 10px 10px 10px;
-  border-color: transparent transparent var(--background-color) transparent;
+.answer-content.answer-correct {
+  border-left: 4px solid var(--success-color);
+  background: linear-gradient(to right, rgba(0, 184, 148, 0.05), transparent 80%);
+}
+
+.answer-content.answer-incorrect {
+  border-left: 4px solid var(--error-color);
+  background: linear-gradient(to right, rgba(214, 48, 49, 0.05), transparent 80%);
 }
 
 .translation-section,
 .examples-section {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  position: relative;
 }
 
-.translation-section h4,
-.examples-section h4 {
-  color: var(--primary-color);
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+.examples-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.original-text {
   font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-.translation-section h4 i,
-.examples-section h4 i {
-  margin-right: 8px;
-  font-size: 1rem;
+  font-size: 1.3em;
+  margin-bottom: 8px;
+  color: #333;
+  line-height: 1.4;
 }
 
 .translation-text {
-  color: var(--text-color);
-  background-color: rgba(108, 92, 231, 0.05);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  margin-top: 0.5rem;
-  font-weight: 500;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 10px;
+  font-size: 1.05em;
+  line-height: 1.5;
 }
 
 .example-text {
-  color: var(--text-color);
-  background-color: rgba(108, 92, 231, 0.1);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  font-style: italic;
+  color: #444;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  padding-left: 12px;
   border-left: 3px solid var(--primary-color);
+  line-height: 1.4;
 }
 
-/* Remove the id-based answer details styles since we're now using inline ones */
-#answer-details {
-  display: none;
+/* Custom animation for showing the answer detail */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.answer-details {
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+/* Result Icons styling enhancement */
+.result-icon {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 2.2rem;
+  opacity: 0.9;
+}
+
+.correct-icon {
+  color: var(--success-color);
+  filter: drop-shadow(0 2px 4px rgba(0, 184, 148, 0.3));
+}
+
+.correct-icon i {
+  animation: pulse 1.5s infinite;
+}
+
+.incorrect-icon {
+  color: var(--error-color);
+  filter: drop-shadow(0 2px 4px rgba(214, 48, 49, 0.3));
+}
+
+.incorrect-icon i {
+  animation: shake 0.5s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+#quiz-content {
+  outline: none;
+}
+
+#quiz-content:focus {
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+  border-radius: var(--border-radius);
 }
 
 /* Quiz Results */
@@ -850,8 +925,16 @@ h2 i {
   color: var(--text-light);
 }
 
-#retake-quiz {
-  margin-top: 1rem;
+#retake-quiz,
+#go-back-button {
+  min-width: 130px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+#go-back-button {
+  background-color: #3498db;
 }
 
 /* Footer */
@@ -982,83 +1065,6 @@ footer {
   }
 }
 
-.answer-content.answer-correct {
-  border-left: 4px solid var(--success-color);
-  border: 2px solid var(--success-color);
-  border-left-width: 4px;
-}
-
-.answer-content.answer-incorrect {
-  border-left: 4px solid var(--error-color);
-  border: 2px solid var(--error-color);
-  border-left-width: 4px;
-}
-
-/* Result Icons */
-.result-icon {
-  display: flex;
-  justify-content: center;
-  margin: -0.5rem 0 1rem 0;
-  font-size: 2rem;
-}
-
-.correct-icon {
-  color: var(--success-color);
-}
-
-.correct-icon i {
-  animation: pulse 1.5s infinite;
-}
-
-.incorrect-icon {
-  color: var(--error-color);
-}
-
-.incorrect-icon i {
-  animation: shake 0.5s;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes shake {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  20%,
-  60% {
-    transform: translateX(-5px);
-  }
-
-  40%,
-  80% {
-    transform: translateX(5px);
-  }
-}
-
-#quiz-content {
-  outline: none;
-}
-
-#quiz-content:focus {
-  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
-  border-radius: var(--border-radius);
-}
-
 /* Completely remove all focus outlines throughout the app */
 *:focus,
 *:focus-visible,
@@ -1146,4 +1152,81 @@ body:not(.using-mouse) *:focus-visible {
     width: 32px;
     height: 32px;
   }
+}
+
+/* Quiz Results Buttons Container */
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+#retake-quiz {
+  margin-top: 0;
+}
+
+#retake-quiz,
+#go-back-button {
+  min-width: 140px;
+  padding: 0.75rem 1.2rem;
+  transition: all 0.3s ease;
+}
+
+#retake-quiz:hover,
+#go-back-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+#go-back-button {
+  background-color: #3498db;
+  margin-left: 10px;
+}
+
+#go-back-button:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 480px) {
+  .buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #retake-quiz,
+  #go-back-button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  #go-back-button {
+    margin-left: 0;
+  }
+}
+
+/* Answer buttons styling */
+.answer-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.answer-buttons-container .btn {
+  min-width: 100px;
+  padding: 0.7rem 1.2rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.answer-buttons-container .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.answer-buttons-container .btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }

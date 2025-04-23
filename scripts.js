@@ -638,14 +638,15 @@ function createAnswerDetails(question) {
     detailsEl.innerHTML = `
         <div class="answer-content">
             <div class="translation-section">
-                <h4><i class="fas fa-language"></i> Answer</h4>
+                <p class="original-text">${question.expression || 'Expression not available'}</p>
                 <p class="translation-text">${question.expression_cn || 'Translation not available'}</p>
             </div>
+            ${question.exemple ? `
             <div class="examples-section">
-                <h4><i class="fas fa-book"></i> Example</h4>
                 <p class="example-text">${question.exemple || ''}</p>
                 <p class="translation-text">${question.exemple_cn || 'Translation not available'}</p>
             </div>
+            ` : ''}
         </div>
     `;
 
@@ -693,9 +694,7 @@ function showAnswerDetails(optionElement, question) {
 
     // Add buttons to the answer details
     const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'button-container';
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.justifyContent = 'space-between';
+    buttonContainer.className = 'answer-buttons-container';
     buttonContainer.innerHTML = `
         <button id="end-quiz" class="btn btn-secondary"><i class="fas fa-stop-circle"></i></button>
         <button id="next-question" class="btn"><i class="fas fa-forward"></i></button>
@@ -1030,6 +1029,27 @@ function showResults() {
     finalScore.textContent = `${score}/${currentQuizQuestions.length}`;
     finalScoreNumber.textContent = score;
     totalQuestions.textContent = currentQuizQuestions.length;
+
+    // Add "Back to Homepage" button if it doesn't exist
+    const buttonsContainer = document.querySelector('#quiz-results .buttons-container');
+    if (buttonsContainer) {
+        // Check if the Go Back button already exists
+        let goBackButton = document.getElementById('go-back-button');
+
+        // If it doesn't exist, create it
+        if (!goBackButton) {
+            goBackButton = document.createElement('button');
+            goBackButton.id = 'go-back-button';
+            goBackButton.className = 'btn btn-secondary';
+            goBackButton.innerHTML = '<i class="fas fa-home"></i> Homepage';
+
+            // Add event listener
+            goBackButton.addEventListener('click', goBackToQuizList);
+
+            // Add to container
+            buttonsContainer.appendChild(goBackButton);
+        }
+    }
 
     // Update URL to show results
     if (currentQuizData) {
