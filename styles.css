@@ -1059,32 +1059,91 @@ footer {
   border-radius: var(--border-radius);
 }
 
-/* Remove default focus outlines but maintain accessibility */
-*:focus {
-  outline: none;
+/* Completely remove all focus outlines throughout the app */
+*:focus,
+*:focus-visible,
+*:focus-within,
+*:active,
+*:target,
+button:focus,
+a:focus,
+input:focus,
+.option:focus,
+.answer-details:focus,
+.answer-content:focus,
+.button-container:focus,
+.button-container *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: inherit !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
-/* Add custom focus styles for keyboard navigation only */
-*:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+/* Preserve accessibility for keyboard users only */
+body:not(.using-mouse) *:focus-visible {
+  outline: 2px solid var(--primary-color) !important;
+  outline-offset: 2px !important;
 }
 
-/* Custom styles for answer-details focus to prevent blue outline */
-.answer-details:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.3);
-}
-
-/* Prevent blue outline on touch devices */
+/* Explicitly disable highlighting for touch devices */
 @media (hover: none) {
-  *:focus {
+  * {
+    -webkit-tap-highlight-color: transparent !important;
     outline: none !important;
     box-shadow: none !important;
   }
 
-  /* Use a subtle background change instead of outlines for focus indication */
-  .answer-details:focus {
-    background-color: rgba(var(--primary-rgb), 0.05);
+  *:focus,
+  *:active,
+  *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+}
+
+/* Add style to detect keyboard vs mouse navigation */
+@keyframes noop {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Sound toggle button */
+.sound-toggle {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.sound-toggle:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .sound-toggle {
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
   }
 }

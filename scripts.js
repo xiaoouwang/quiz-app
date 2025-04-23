@@ -63,6 +63,9 @@ let quizzesMetadata = [];
 let currentAnswerDetails = null; // To track the current answer details element
 let currentFilter = 'all';      // Track current category filter
 let currentThemeFilter = 'all'; // Track current theme filter
+let correctSound = null;        // Sound for correct answers
+let incorrectSound = null;      // Sound for incorrect answers
+let soundEnabled = true;        // Flag to enable/disable sounds
 
 // Category icons mapping
 const categoryIcons = {
@@ -726,6 +729,194 @@ function showAnswerDetails(optionElement, question) {
     }, 300);
 }
 
+// Initialize sounds
+function initSounds() {
+  // Set up simple HTML5 audio elements directly in the DOM for better browser support
+  const soundContainer = document.createElement('div');
+  soundContainer.style.display = 'none';
+  soundContainer.innerHTML = `
+    <audio id="correct-sound" preload="auto">
+      <source src="./sounds/right.wav" type="audio/wav">
+      <source src="https://www.soundjay.com/button/sounds/button-14.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="incorrect-sound" preload="auto">
+      <source src="./sounds/wrong.wav" type="audio/wav">
+      <source src="https://www.soundjay.com/button/sounds/button-10.mp3" type="audio/mpeg">
+    </audio>
+  `;
+  document.body.appendChild(soundContainer);
+
+  // Override the Audio objects with direct references to the DOM elements
+  correctSound = document.getElementById('correct-sound');
+  incorrectSound = document.getElementById('incorrect-sound');
+
+  // Add error handling for each audio element
+  correctSound.addEventListener('error', (e) => {
+    console.error('Error loading correct sound:', e);
+    // Try to create a fallback if the audio tag fails
+    const fallbackSound = new Audio();
+    fallbackSound.src = './sounds/right.wav';
+    correctSound = fallbackSound;
+  });
+
+  incorrectSound.addEventListener('error', (e) => {
+    console.error('Error loading incorrect sound:', e);
+    // Try to create a fallback if the audio tag fails
+    const fallbackSound = new Audio();
+    fallbackSound.src = './sounds/wrong.wav';
+    incorrectSound = fallbackSound;
+  });
+
+  // Check if sound files exist
+  fetch('./sounds/right.wav')
+    .then(response => {
+      if (!response.ok) {
+        console.warn('right.wav not found, will use fallback');
+      } else {
+        console.log('right.wav loaded successfully');
+      }
+    })
+    .catch(err => {
+      console.error('Error checking for right.wav:', err);
+    });
+
+  fetch('./sounds/wrong.wav')
+    .then(response => {
+      if (!response.ok) {
+        console.warn('wrong.wav not found, will use fallback');
+      } else {
+        console.log('wrong.wav loaded successfully');
+      }
+    })
+    .catch(err => {
+      console.error('Error checking for wrong.wav:', err);
+    });
+
+  // Add sound toggle button to the header
+  const headerContent = document.querySelector('.header-content');
+  if (headerContent) {
+    const soundToggle = document.createElement('button');
+    soundToggle.className = 'sound-toggle';
+    soundToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+    soundToggle.title = 'Toggle Sound';
+
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundToggle.innerHTML = soundEnabled ?
+        '<i class="fas fa-volume-up"></i>' :
+        '<i class="fas fa-volume-mute"></i>';
+
+      // Attempt to play a test sound when enabling
+      if (soundEnabled) {
+        // Use a direct click-triggered play for the test
+        const testPlay = () => {
+          correctSound.volume = 0.2; // Lower volume for test
+          correctSound.play()
+            .then(() => {
+              correctSound.volume = 1.0; // Reset volume after test
+              console.log("Sound test success");
+              if (typeof window.showToast === 'function') {
+                window.showToast('Sound enabled', 'success');
+              }
+            })
+            .catch(e => {
+              console.error("Sound test failed:", e);
+              if (typeof window.showToast === 'function') {
+                window.showToast('Sound enabled, but autoplay blocked. Click anywhere to unlock audio.', 'info');
+              }
+            });
+        };
+
+        // Use setTimeout to separate the click event from the play attempt
+        setTimeout(testPlay, 50);
+      } else {
+        if (typeof window.showToast === 'function') {
+          window.showToast('Sound muted', 'info');
+        }
+      }
+    });
+
+    // Insert before the auth container
+    const authContainer = headerContent.querySelector('.auth-container');
+    if (authContainer) {
+      headerContent.insertBefore(soundToggle, authContainer);
+    } else {
+      headerContent.appendChild(soundToggle);
+    }
+  }
+
+  // Initialize with a user interaction to unlock audio
+  const unlockAudio = () => {
+    // Create and play a silent audio context
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioCtx = new AudioContext();
+      const silence = audioCtx.createBuffer(1, 1, 22050);
+      const source = audioCtx.createBufferSource();
+      source.buffer = silence;
+      source.connect(audioCtx.destination);
+      source.start(0);
+
+      // Also try to play and immediately pause our sounds
+      correctSound.play().then(() => {
+        correctSound.pause();
+        correctSound.currentTime = 0;
+      }).catch(e => console.log("Audio unlock failed:", e));
+
+      incorrectSound.play().then(() => {
+        incorrectSound.pause();
+        incorrectSound.currentTime = 0;
+      }).catch(e => console.log("Audio unlock failed:", e));
+
+      // Remove the listeners after first interaction
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+    } catch (e) {
+      console.error("Audio context unlock failed:", e);
+    }
+  };
+
+  // Add listeners to unlock audio
+  document.addEventListener('click', unlockAudio, {once: true});
+  document.addEventListener('touchstart', unlockAudio, {once: true});
+}
+
+// Play sound based on answer correctness
+function playSound(isCorrect) {
+  if (!soundEnabled) return;
+
+  try {
+    // Get direct references to the audio elements to ensure they're current
+    const correctAudio = document.getElementById('correct-sound');
+    const incorrectAudio = document.getElementById('incorrect-sound');
+
+    if (!correctAudio || !incorrectAudio) {
+      console.error("Sound elements not found");
+      return;
+    }
+
+    // Stop any currently playing sounds
+    correctAudio.pause();
+    correctAudio.currentTime = 0;
+    incorrectAudio.pause();
+    incorrectAudio.currentTime = 0;
+
+    // Play the appropriate sound with user-triggered method
+    const playNow = () => {
+      if (isCorrect) {
+        correctAudio.play().catch(e => console.error("Failed to play correct sound:", e));
+      } else {
+        incorrectAudio.play().catch(e => console.error("Failed to play incorrect sound:", e));
+      }
+    };
+
+    // Use setTimeout to slightly delay play and separate from the user interaction
+    setTimeout(playNow, 50);
+  } catch (error) {
+    console.error('Error playing sound:', error);
+  }
+}
+
 // Select an option
 function selectOption(optionElement, selectedIndex, correctIndex) {
     if (hasAnswered) return;
@@ -745,15 +936,19 @@ function selectOption(optionElement, selectedIndex, correctIndex) {
     optionElement.classList.add('selected');
 
     // Check if answer is correct
-    if (selectedIndex === correctIndex) {
+    const isCorrect = selectedIndex === correctIndex;
+
+    if (isCorrect) {
         optionElement.classList.add('correct');
         score++;
         scoreCounter.innerHTML = `<i class="fas fa-star"></i> Score: ${score}`;
+        playSound(true); // Play correct sound
     } else {
         optionElement.classList.add('incorrect');
 
         // Show correct answer
         document.querySelectorAll('.option')[correctIndex].classList.add('correct');
+        playSound(false); // Play incorrect sound
 
         // Store the failed question in Firestore if user is logged in
         if (typeof window.addFailedQuestion === 'function') {
@@ -1024,19 +1219,55 @@ function handleFirebaseInitFailure() {
 
 // Initialize application with error handling for Firebase
 async function initApp() {
-  showLocalFileWarning();
-  setupCategoryFilters();
+    showLocalFileWarning();
+    setupCategoryFilters();
+    initSounds(); // Initialize sounds
+    setupAccessibility(); // Setup keyboard/mouse detection
 
-  try {
-    quizzesMetadata = await fetchQuizMetadata();
-    await displayCategoriesAndQuizzes(quizzesMetadata);
-  } catch (error) {
-    console.error("Failed to initialize app:", error);
-    handleFirebaseInitFailure();
+    try {
+        quizzesMetadata = await fetchQuizMetadata();
+        await displayCategoriesAndQuizzes(quizzesMetadata);
+    } catch (error) {
+        console.error("Failed to initialize app:", error);
+        handleFirebaseInitFailure();
+    }
+
+    // Handle initial routing
+    handleRouting();
+}
+
+// Set up accessibility features for keyboard vs mouse navigation
+function setupAccessibility() {
+  // Add class to body when using mouse
+  document.body.addEventListener('mousedown', function() {
+    document.body.classList.add('using-mouse');
+  });
+
+  // Remove class when using keyboard
+  document.body.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      document.body.classList.remove('using-mouse');
+    }
+  });
+
+  // Eliminate all purple focus rings on touch devices
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    // Add a style element that completely disables all focus outlines
+    const style = document.createElement('style');
+    style.textContent = `
+      * {
+        -webkit-tap-highlight-color: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      *:focus, *:active {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    `;
+    document.head.appendChild(style);
   }
-
-  // Handle initial routing
-  handleRouting();
 }
 
 // Start the app when DOM is loaded
