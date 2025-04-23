@@ -1058,3 +1058,33 @@ footer {
   box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
   border-radius: var(--border-radius);
 }
+
+/* Remove default focus outlines but maintain accessibility */
+*:focus {
+  outline: none;
+}
+
+/* Add custom focus styles for keyboard navigation only */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Custom styles for answer-details focus to prevent blue outline */
+.answer-details:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.3);
+}
+
+/* Prevent blue outline on touch devices */
+@media (hover: none) {
+  *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Use a subtle background change instead of outlines for focus indication */
+  .answer-details:focus {
+    background-color: rgba(var(--primary-rgb), 0.05);
+  }
+}

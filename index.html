@@ -11,6 +11,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #6c5ce7;
+      --primary-light: rgba(108, 92, 231, 0.6);
+      --primary-rgb: 108, 92, 231;
+      /* Default RGB values for primary color */
+      --secondary-color: #fd79a8;
+      --neutral-color: #ffeaa7;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
     /* Auth modal styles */
     .auth-container {
       display: flex;
@@ -450,24 +462,48 @@
       getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc,
       arrayUnion, arrayRemove, enableIndexedDbPersistence, CACHE_SIZE_UNLIMITED
     } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-    import { firebaseConfig } from "./firebase-config.js";
+    import { loadFirebaseConfig } from "./firebase-config-loader.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    // Load Firebase configuration securely
+    let app, auth, db;
 
-    // Enable offline persistence
-    enableIndexedDbPersistence(db)
-      .then(() => {
-        console.log("Offline persistence enabled");
-      })
-      .catch((err) => {
-        if (err.code === 'failed-precondition') {
-          console.warn("Multiple tabs open, persistence can only be enabled in one tab at a time");
-        } else if (err.code === 'unimplemented') {
-          console.warn("Browser doesn't support IndexedDB persistence");
+    async function initFirebase() {
+      try {
+        // Load the secure configuration
+        const firebaseConfig = await loadFirebaseConfig();
+
+        if (!firebaseConfig) {
+          throw new Error("Could not load Firebase configuration");
         }
-      });
+
+        // Initialize Firebase with the loaded config
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // Enable offline persistence
+        enableIndexedDbPersistence(db)
+          .then(() => {
+            console.log("Offline persistence enabled");
+          })
+          .catch((err) => {
+            if (err.code === 'failed-precondition') {
+              console.warn("Multiple tabs open, persistence can only be enabled in one tab at a time");
+            } else if (err.code === 'unimplemented') {
+              console.warn("Browser doesn't support IndexedDB persistence");
+            }
+          });
+
+        // Set up auth state listener once Firebase is initialized
+        setupAuthListeners();
+      } catch (error) {
+        console.error("Failed to initialize Firebase:", error);
+        showToast("Failed to connect to Firebase. Please try again later.", "error");
+      }
+    }
+
+    // Initialize Firebase when the page loads
+    initFirebase();
 
     // Local storage fallback for failed questions
     const LOCAL_STORAGE_KEY = 'quiz_failed_questions';
@@ -508,45 +544,47 @@
     }
 
     // Auth State Changes
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        loginButton.style.display = 'none';
-        registerButton.style.display = 'none';
-        guestButton.style.display = 'none';
-        userInfo.style.display = 'flex';
+    function setupAuthListeners() {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          loginButton.style.display = 'none';
+          registerButton.style.display = 'none';
+          guestButton.style.display = 'none';
+          userInfo.style.display = 'flex';
 
-        if (user.isAnonymous) {
-          userEmail.textContent = 'Guest User';
-        } else {
-          userEmail.textContent = user.email;
+          if (user.isAnonymous) {
+            userEmail.textContent = 'Guest User';
+          } else {
+            userEmail.textContent = user.email;
 
-          // Load failed questions for authenticated users
-          try {
-            await loadFailedQuestions(user.uid);
-          } catch (error) {
-            console.error("Error loading failed questions:", error);
+            // Load failed questions for authenticated users
+            try {
+              await loadFailedQuestions(user.uid);
+            } catch (error) {
+              console.error("Error loading failed questions:", error);
 
-            // Try to load from local storage if Firebase fails
-            const localQuestions = getLocalFailedQuestions();
-            if (localQuestions && localQuestions.length > 0) {
-              displayFailedQuestions(localQuestions);
-              showToast('Loaded questions from local storage (offline mode)', 'info');
+              // Try to load from local storage if Firebase fails
+              const localQuestions = getLocalFailedQuestions();
+              if (localQuestions && localQuestions.length > 0) {
+                displayFailedQuestions(localQuestions);
+                showToast('Loaded questions from local storage (offline mode)', 'info');
+              }
             }
           }
+
+          closeAllModals();
+        } else {
+          loginButton.style.display = 'block';
+          registerButton.style.display = 'block';
+          guestButton.style.display = 'block';
+          logoutButton.style.display = 'none';
+          userInfo.style.display = 'none';
+
+          // Hide failed questions section
+          failedQuestionsSection.style.display = 'none';
         }
-
-        closeAllModals();
-      } else {
-        loginButton.style.display = 'block';
-        registerButton.style.display = 'block';
-        guestButton.style.display = 'block';
-        logoutButton.style.display = 'none';
-        userInfo.style.display = 'none';
-
-        // Hide failed questions section
-        failedQuestionsSection.style.display = 'none';
-      }
-    });
+      });
+    }
 
     // Event Listeners
     loginButton.addEventListener('click', () => openModal(loginModal));

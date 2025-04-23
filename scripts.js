@@ -534,6 +534,9 @@ async function loadQuiz(quiz) {
         const rgb = hexToRgb(quiz.theme_color);
         const lighterColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.6)`;
         document.documentElement.style.setProperty('--primary-light', lighterColor);
+
+        // Also set RGB values for use in CSS variables
+        document.documentElement.style.setProperty('--primary-rgb', `${rgb[0]}, ${rgb[1]}, ${rgb[2]}`);
     }
 
     // Fetch quiz questions
@@ -717,15 +720,9 @@ function showAnswerDetails(optionElement, question) {
 
     // Focus on the answer detail card with a slight delay to ensure scrolling completes first
     setTimeout(() => {
-        detailsEl.focus();
+        detailsEl.focus({ preventScroll: true });
 
-        // For mobile: add touch highlight or outline to make it clear where focus is
-        detailsEl.style.outline = '2px solid var(--primary-color)';
-
-        // Remove outline after a short time
-        setTimeout(() => {
-            detailsEl.style.outline = '';
-        }, 1000);
+        // No need for custom outline management since we're handling it in CSS now
     }, 300);
 }
 
@@ -1002,15 +999,44 @@ retakeQuizButton.addEventListener('click', retakeQuiz);
 appTitle.addEventListener('click', goToHomepage);
 window.addEventListener('hashchange', handleRouting);
 
-// Initialize application
+// Function to handle Firebase initialization failures
+function handleFirebaseInitFailure() {
+  const errorMessage = `
+    <div class="error-message" style="text-align: center; padding: 2rem; margin: 2rem auto; max-width: 600px; background: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      <h3 style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> Firebase Configuration Error</h3>
+      <p>Unable to load Firebase configuration. This might be due to:</p>
+      <ul style="text-align: left; margin: 1rem 0; padding-left: 2rem;">
+        <li>Network connectivity issues</li>
+        <li>Missing Firebase configuration</li>
+        <li>Browser security restrictions</li>
+      </ul>
+      <p>You can still browse the app, but some features may not work.</p>
+      <button onclick="location.reload()" style="padding: 0.5rem 1rem; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 1rem;">Retry</button>
+    </div>
+  `;
+
+  // Show error message in the theme container
+  const container = document.getElementById('theme-container');
+  if (container) {
+    container.innerHTML = errorMessage;
+  }
+}
+
+// Initialize application with error handling for Firebase
 async function initApp() {
-    showLocalFileWarning();
-    setupCategoryFilters();
+  showLocalFileWarning();
+  setupCategoryFilters();
+
+  try {
     quizzesMetadata = await fetchQuizMetadata();
     await displayCategoriesAndQuizzes(quizzesMetadata);
+  } catch (error) {
+    console.error("Failed to initialize app:", error);
+    handleFirebaseInitFailure();
+  }
 
-    // Handle initial routing
-    handleRouting();
+  // Handle initial routing
+  handleRouting();
 }
 
 // Start the app when DOM is loaded
