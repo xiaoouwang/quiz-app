@@ -1,6 +1,19 @@
 // Import Firebase configuration, with environment variable support
 let firebaseConfig;
-try {
+
+if (typeof process !== 'undefined' && process.env.FIREBASE_API_KEY) {
+  // Use environment variables if available
+  firebaseConfig = {
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID
+  };
+  initializeFirebase();
+} else {
   // Try to import from local file first
   import('./firebase-config.js')
     .then(module => {
@@ -9,24 +22,8 @@ try {
     })
     .catch(error => {
       console.error("Could not load firebase-config.js", error);
-      // Check if environment variables are available (for deployment)
-      if (typeof process !== 'undefined' && process.env) {
-        firebaseConfig = {
-          apiKey: process.env.FIREBASE_API_KEY,
-          authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-          projectId: process.env.FIREBASE_PROJECT_ID,
-          storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-          messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-          appId: process.env.FIREBASE_APP_ID,
-          measurementId: process.env.FIREBASE_MEASUREMENT_ID
-        };
-        initializeFirebase();
-      } else {
-        console.error("No Firebase configuration available");
-      }
+      console.error("No Firebase configuration available");
     });
-} catch (e) {
-  console.error("Error setting up Firebase:", e);
 }
 
 function initializeFirebase() {
