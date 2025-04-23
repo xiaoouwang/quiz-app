@@ -618,6 +618,23 @@ h2 i {
   text-align: center;
   font-weight: 600;
   outline: none;
+  transition: font-size 0.3s ease;
+}
+
+#expression.long-expression {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  #expression.long-expression {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    padding: 0 10px;
+  }
 }
 
 #expression:focus {
