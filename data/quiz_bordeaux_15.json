@@ -1,0 +1,212 @@
+[
+  {
+    "expression": "Quelle région est célèbre pour ses vins autour de Bordeaux ?",
+    "expression_cn": "波尔多周边的葡萄酒产区是全球知名的（le Bordelais）",
+    "options": [
+      "La Champagne (香槟区)",
+      "Le Bordelais (波尔多产区)",
+      "Le Languedoc (朗格多克)",
+      "La Bourgogne (勃艮第)"
+    ],
+    "answer_index": 1,
+    "exemple": "Le Bordelais produit certains des vins les plus prestigieux du monde.",
+    "exemple_cn": "波尔多地区的葡萄酒可是世界顶流，喝完忍不住吹一波。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel fleuve traverse Bordeaux ?",
+    "expression_cn": "加龙河（La Garonne）",
+    "options": [
+      "La Garonne (加龙河)",
+      "La Dordogne",
+      "La Loire",
+      "La Seine"
+    ],
+    "answer_index": 0,
+    "exemple": "La Garonne donne à Bordeaux son port emblématique en croissant.",
+    "exemple_cn": "波尔多的“月亮港”就是因为加龙河弯弯的河道得名的。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel célèbre miroir d'eau se trouve à Bordeaux ?",
+    "expression_cn": "水镜广场（Le miroir d’eau）",
+    "options": [
+      "Le miroir d’eau (水镜广场)",
+      "Le bassin d’Arcachon",
+      "La place de la République",
+      "La place Bellecour"
+    ],
+    "answer_index": 0,
+    "exemple": "Le miroir d’eau est un lieu incontournable face à la place de la Bourse.",
+    "exemple_cn": "水镜广场正对着交易广场，拍照超梦幻，尤其是黄昏时候。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel est le nom de la spécialité sucrée typique de Bordeaux ?",
+    "expression_cn": "卡内雷蛋糕（Le cannelé）",
+    "options": [
+      "Le macaron",
+      "Le cannelé (卡内雷)",
+      "La madeleine",
+      "La tarte tropézienne"
+    ],
+    "answer_index": 1,
+    "exemple": "Le cannelé est un petit gâteau caramélisé à l’extérieur et moelleux à l’intérieur.",
+    "exemple_cn": "卡内雷外脆里嫩，甜而不腻，一口一个根本停不下来！",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel monument emblématique se trouve sur la place des Quinconces ?",
+    "expression_cn": "吉伦特纪念碑（Monument aux Girondins）",
+    "options": [
+      "Colonne de Juillet",
+      "Tour Pey-Berland",
+      "Obélisque de Louxor",
+      "Monument aux Girondins (吉伦特纪念碑)"
+    ],
+    "answer_index": 3,
+    "exemple": "Le monument aux Girondins rend hommage aux députés de la Révolution française.",
+    "exemple_cn": "吉伦特纪念碑是为了纪念大革命时期的吉伦特派议员建的，雕像超震撼！",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quelle célèbre cité culturelle et vinicole a ouvert en 2016 à Bordeaux ?",
+    "expression_cn": "葡萄酒之城（La Cité du Vin）",
+    "options": [
+      "La Halle aux Vins",
+      "La Cité du Vin (葡萄酒之城)",
+      "Le Palais du Vin",
+      "La Cave des Grands Crus"
+    ],
+    "answer_index": 1,
+    "exemple": "La Cité du Vin propose une immersion interactive dans l’univers du vin.",
+    "exemple_cn": "葡萄酒之城是个高科技博物馆，连不喝酒的人都能玩得很开心！",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel est le nom du grand théâtre de Bordeaux ?",
+    "expression_cn": "大剧院（Le Grand Théâtre）",
+    "options": [
+      "Le Théâtre du Capitole",
+      "Le Grand Théâtre (大剧院)",
+      "Le Théâtre antique",
+      "L’Opéra Bastille"
+    ],
+    "answer_index": 1,
+    "exemple": "Le Grand Théâtre est l’un des plus beaux bâtiments néoclassiques de France.",
+    "exemple_cn": "波尔多的大剧院可是新古典主义建筑中的颜值天花板。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel port naturel en forme de croissant entoure Bordeaux ?",
+    "expression_cn": "月亮港（Port de la Lune）",
+    "options": [
+      "Port de l'Étoile",
+      "Port des Lumières",
+      "Port de la Lune (月亮港)",
+      "Port Atlantique"
+    ],
+    "answer_index": 2,
+    "exemple": "Le Port de la Lune est inscrit au patrimoine mondial de l’UNESCO.",
+    "exemple_cn": "月亮港的月牙形让联合国都点赞，直接收进了世界遗产名单。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel quartier historique est connu pour ses ruelles pavées et ses bars à vin ?",
+    "expression_cn": "圣皮埃尔区（Quartier Saint-Pierre）",
+    "options": [
+      "Quartier Saint-Pierre (圣皮埃尔区)",
+      "Quartier Latin",
+      "La Bastide",
+      "Les Chartrons"
+    ],
+    "answer_index": 0,
+    "exemple": "Le quartier Saint-Pierre est le cœur historique de Bordeaux.",
+    "exemple_cn": "圣皮埃尔区是波尔多最古老的地方，边走边喝超惬意。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel type d’édifice est la Grosse Cloche de Bordeaux ?",
+    "expression_cn": "钟楼（Beffroi）",
+    "options": [
+      "Minaret",
+      "Cathédrale",
+      "Tour de l’Horloge",
+      "Beffroi (钟楼)"
+    ],
+    "answer_index": 3,
+    "exemple": "La Grosse Cloche sonnait autrefois les heures et alertait en cas d’incendie.",
+    "exemple_cn": "这座大钟楼以前是用来报时和火警用的，现在成了打卡胜地。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quelle région est célèbre pour ses vins autour de Bordeaux ?",
+    "expression_cn": "波尔多周边的葡萄酒产区是全球知名的（le Bordelais）",
+    "options": [
+      "La Champagne (香槟区)",
+      "La Bourgogne (勃艮第)",
+      "Le Languedoc (朗格多克)",
+      "Le Bordelais (波尔多产区)"
+    ],
+    "answer_index": 3,
+    "exemple": "Le Bordelais produit certains des vins les plus prestigieux du monde.",
+    "exemple_cn": "波尔多地区的葡萄酒可是世界顶流，喝完忍不住吹一波。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel fleuve traverse Bordeaux ?",
+    "expression_cn": "加龙河（La Garonne）",
+    "options": [
+      "La Seine",
+      "La Dordogne",
+      "La Garonne (加龙河)",
+      "La Loire"
+    ],
+    "answer_index": 2,
+    "exemple": "La Garonne donne à Bordeaux son port emblématique en croissant.",
+    "exemple_cn": "波尔多的“月亮港”就是因为加龙河弯弯的河道得名的。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel célèbre miroir d'eau se trouve à Bordeaux ?",
+    "expression_cn": "水镜广场（Le miroir d’eau）",
+    "options": [
+      "Le miroir d’eau (水镜广场)",
+      "La place Bellecour",
+      "La place de la République",
+      "Le bassin d’Arcachon"
+    ],
+    "answer_index": 0,
+    "exemple": "Le miroir d’eau est un lieu incontournable face à la place de la Bourse.",
+    "exemple_cn": "水镜广场正对着交易广场，拍照超梦幻，尤其是黄昏时候。",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel est le nom de la spécialité sucrée typique de Bordeaux ?",
+    "expression_cn": "卡内雷蛋糕（Le cannelé）",
+    "options": [
+      "La tarte tropézienne",
+      "Le macaron",
+      "Le cannelé (卡内雷)",
+      "La madeleine"
+    ],
+    "answer_index": 2,
+    "exemple": "Le cannelé est un petit gâteau caramélisé à l’extérieur et moelleux à l’intérieur.",
+    "exemple_cn": "卡内雷外脆里嫩，甜而不腻，一口一个根本停不下来！",
+    "theme": "Bordeaux"
+  },
+  {
+    "expression": "Quel monument emblématique se trouve sur la place des Quinconces ?",
+    "expression_cn": "吉伦特纪念碑（Monument aux Girondins）",
+    "options": [
+      "Tour Pey-Berland",
+      "Colonne de Juillet",
+      "Obélisque de Louxor",
+      "Monument aux Girondins (吉伦特纪念碑)"
+    ],
+    "answer_index": 3,
+    "exemple": "Le monument aux Girondins rend hommage aux députés de la Révolution française.",
+    "exemple_cn": "吉伦特纪念碑是为了纪念大革命时期的吉伦特派议员建的，雕像超震撼！",
+    "theme": "Bordeaux"
+  }
+]

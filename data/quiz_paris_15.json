@@ -1,0 +1,212 @@
+[
+  {
+    "expression": "Quel monument est surnommé la « Dame de fer » à Paris ?",
+    "expression_cn": "埃菲尔铁塔（La tour Eiffel）",
+    "options": [
+      "La cathédrale Notre-Dame (巴黎圣母院)",
+      "Le Panthéon (先贤祠)",
+      "L'Arc de Triomphe (凯旋门)",
+      "La tour Eiffel (埃菲尔铁塔)"
+    ],
+    "answer_index": 3,
+    "exemple": "La tour Eiffel a été construite en 1889 pour l’Exposition universelle.",
+    "exemple_cn": "埃菲尔铁塔是1889年为世界博览会建造的，现在可是巴黎最有代表性的景点啦！",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel musée abrite la Joconde ?",
+    "expression_cn": "卢浮宫（Le Louvre）",
+    "options": [
+      "Le Louvre (卢浮宫)",
+      "Le musée d'Orsay (奥赛博物馆)",
+      "Le Centre Pompidou (蓬皮杜艺术中心)",
+      "Le musée Rodin (罗丹美术馆)"
+    ],
+    "answer_index": 0,
+    "exemple": "La Joconde, peinte par Léonard de Vinci, est exposée au Louvre.",
+    "exemple_cn": "达芬奇画的《蒙娜丽莎》就藏在卢浮宫里，还总是人山人海。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel quartier est célèbre pour sa vie bohème et artistique à Paris ?",
+    "expression_cn": "蒙马特（Montmartre）",
+    "options": [
+      "Montmartre (蒙马特)",
+      "Le Marais (玛黑区)",
+      "Saint-Germain-des-Prés (圣日耳曼)",
+      "La Défense (拉德芳斯)"
+    ],
+    "answer_index": 0,
+    "exemple": "Montmartre a été le repaire de nombreux artistes comme Picasso.",
+    "exemple_cn": "蒙马特曾是毕加索等艺术家的据点，现在还有街头画家给你画像。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel fleuve traverse Paris ?",
+    "expression_cn": "塞纳河（La Seine）",
+    "options": [
+      "Le Rhône (罗讷河)",
+      "La Loire (卢瓦尔河)",
+      "La Seine (塞纳河)",
+      "La Garonne (加龙河)"
+    ],
+    "answer_index": 2,
+    "exemple": "La Seine coupe Paris en deux rives : la rive droite et la rive gauche.",
+    "exemple_cn": "塞纳河把巴黎分成左岸和右岸，各有各的风情。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel plat typique peut-on manger dans un bistrot parisien ?",
+    "expression_cn": "牛排薯条（Steak-frites）",
+    "options": [
+      "Bouillabaisse (马赛鱼汤)",
+      "Steak-frites (牛排薯条)",
+      "Tartiflette (奶酪焗土豆)",
+      "Ratatouille (普罗旺斯炖菜)"
+    ],
+    "answer_index": 1,
+    "exemple": "Un bon steak-frites, c’est le classique indémodable du bistrot !",
+    "exemple_cn": "在巴黎小酒馆里来份牛排薯条，才叫地道法式体验～",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Où se trouve la tombe de Napoléon à Paris ?",
+    "expression_cn": "荣军院（Les Invalides）",
+    "options": [
+      "La Sainte-Chapelle (圣礼拜堂)",
+      "Le Panthéon (先贤祠)",
+      "Les Invalides (荣军院)",
+      "Notre-Dame (巴黎圣母院)"
+    ],
+    "answer_index": 2,
+    "exemple": "Les Invalides abritent la tombe de Napoléon sous un grand dôme doré.",
+    "exemple_cn": "荣军院里金光闪闪的大圆顶下面，就是拿破仑的陵墓。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel est le grand parc boisé à l’ouest de Paris ?",
+    "expression_cn": "布洛涅森林（Bois de Boulogne）",
+    "options": [
+      "Jardin du Luxembourg (卢森堡公园)",
+      "Bois de Boulogne (布洛涅森林)",
+      "Parc des Buttes-Chaumont (肖蒙山丘公园)",
+      "Bois de Vincennes (文森森林)"
+    ],
+    "answer_index": 1,
+    "exemple": "Le Bois de Boulogne est deux fois plus grand que Central Park à New York !",
+    "exemple_cn": "布洛涅森林比纽约的中央公园还大两倍，是散步野餐的好去处。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel cabaret est célèbre pour son moulin rouge sur le toit ?",
+    "expression_cn": "红磨坊（Moulin Rouge）",
+    "options": [
+      "Folies Bergère",
+      "Le Lido",
+      "Moulin Rouge (红磨坊)",
+      "Crazy Horse"
+    ],
+    "answer_index": 2,
+    "exemple": "Le Moulin Rouge est le cabaret emblématique de Montmartre, avec son célèbre french cancan.",
+    "exemple_cn": "红磨坊是蒙马特最经典的歌舞表演场，french cancan 保证让你眼花缭乱！",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Où se trouve la pyramide de verre du Louvre ?",
+    "expression_cn": "卢浮宫的正门（entrée principale）",
+    "options": [
+      "Dans la cour Napoléon (拿破仑庭院)",
+      "Devant Notre-Dame",
+      "Dans le jardin du Luxembourg",
+      "Sur la place de la Concorde"
+    ],
+    "answer_index": 0,
+    "exemple": "La pyramide de verre marque l’entrée principale du Louvre.",
+    "exemple_cn": "那座玻璃金字塔就是卢浮宫的正门，现代感和古典美交相辉映。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel célèbre café parisien a accueilli Sartre et Simone de Beauvoir ?",
+    "expression_cn": "双叟咖啡馆（Café de Flore）",
+    "options": [
+      "Café des Deux Moulins",
+      "Café de Flore (双叟咖啡馆)",
+      "Les Deux Magots",
+      "Le Procope"
+    ],
+    "answer_index": 1,
+    "exemple": "Jean-Paul Sartre et Simone de Beauvoir écrivaient au Café de Flore.",
+    "exemple_cn": "萨特和波伏娃最爱在双叟咖啡馆谈人生、写哲学。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel monument est aligné avec l’Arc de Triomphe sur l’axe historique ?",
+    "expression_cn": "卢浮宫（Le Louvre）",
+    "options": [
+      "La Concorde",
+      "Le Grand Palais",
+      "La Défense",
+      "Le Louvre (卢浮宫)"
+    ],
+    "answer_index": 3,
+    "exemple": "Le Louvre, la Concorde, l’Arc de Triomphe et la Défense forment un axe parfait.",
+    "exemple_cn": "卢浮宫、协和广场、凯旋门一直到拉德芳斯，组成了“历史轴线”。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel est le surnom de Paris ?",
+    "expression_cn": "光之城（La Ville Lumière）",
+    "options": [
+      "La Cité Éternelle",
+      "La Ville Lumière (光之城)",
+      "La Grande Dame",
+      "La Belle Endormie"
+    ],
+    "answer_index": 1,
+    "exemple": "Paris est surnommée la Ville Lumière depuis le siècle des Lumières.",
+    "exemple_cn": "“光之城”是启蒙时代给巴黎的昵称，夜景也确实名不虚传。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quelle gare dessert Londres depuis Paris ?",
+    "expression_cn": "北站（Gare du Nord）",
+    "options": [
+      "Gare du Nord (北站)",
+      "Gare de Lyon",
+      "Gare Montparnasse",
+      "Gare Saint-Lazare"
+    ],
+    "answer_index": 0,
+    "exemple": "L’Eurostar part de la Gare du Nord pour traverser la Manche.",
+    "exemple_cn": "想坐欧洲之星去伦敦？记得去北站搭车哦！",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel est le plus vieux pont de Paris ?",
+    "expression_cn": "新桥（Pont Neuf）",
+    "options": [
+      "Pont Alexandre III",
+      "Pont des Arts",
+      "Pont Neuf (新桥)",
+      "Pont Marie"
+    ],
+    "answer_index": 2,
+    "exemple": "Le Pont Neuf est paradoxalement le plus vieux pont de la ville.",
+    "exemple_cn": "“新桥”其实是巴黎最老的桥，名字骗很大。",
+    "theme": "Paris"
+  },
+  {
+    "expression": "Quel édifice gothique a été ravagé par un incendie en 2019 ?",
+    "expression_cn": "巴黎圣母院（Notre-Dame de Paris）",
+    "options": [
+      "Le Sacré-Cœur",
+      "Notre-Dame de Paris (巴黎圣母院)",
+      "Le Panthéon",
+      "La Sainte-Chapelle"
+    ],
+    "answer_index": 1,
+    "exemple": "La cathédrale Notre-Dame a été partiellement détruite par un incendie.",
+    "exemple_cn": "巴黎圣母院在2019年的大火中严重受损，全球心都碎了。",
+    "theme": "Paris"
+  }
+]

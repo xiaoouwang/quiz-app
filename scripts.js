@@ -601,6 +601,13 @@ function showQuestion() {
     // Set question content
     expression.textContent = question.expression;
 
+    // Adjust font size based on category - smaller for villes_france category
+    if (currentQuizData && currentQuizData.category === 'villes_france') {
+        expression.classList.add('long-expression');
+    } else {
+        expression.classList.remove('long-expression');
+    }
+
     // Create options
     optionsContainer.innerHTML = '';
     question.options.forEach((option, index) => {
