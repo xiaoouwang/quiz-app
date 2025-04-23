@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "filename": "quiz_chunk_1_updated.json",
+    "title": "French Expressions Quiz 1",
+    "category": "francais",
+    "description": "",
+    "theme_color": "#6c5ce7"
+  },
+  {
+    "id": 2,
+    "filename": "quiz_chunk_2_updated.json",
+    "title": "French Expressions Quiz 2",
+    "category": "francais",
+    "description": "",
+    "theme_color": "#6c5ce7"
+  },
+  {
+    "id": 3,
+    "filename": "quiz_chunk_3_updated.json",
+    "title": "French Expressions Quiz 3",
+    "category": "francais",
+    "description": "",
+    "theme_color": "#6c5ce7"
+  },
+  {
+    "id": 4,
+    "filename": "quiz_chunk_4_updated.json",
+    "title": "French Expressions Quiz 4",
+    "category": "francais",
+    "description": "",
+    "theme_color": "#6c5ce7"
+  },
+  {
+    "id": 5,
+    "filename": "quiz_chunk_5_updated.json",
+    "title": "French Expressions Quiz 5",
+    "category": "francais",
+    "description": "",
+    "theme_color": "#6c5ce7"
+  },
+  {
+    "id": 6,
+    "filename": "quiz_chunk_6_updated.json",
+    "title": "French Expressions Quiz 6",
+    "category": "francais",
+    "description": "",
+    "theme_color": "#6c5ce7"
+  },
+  {
+    "id": 7,
+    "filename": "quiz_nice_15.json",
+    "title": "French Cities Quiz",
+    "category": "villes_france",
+    "description": "Test your knowledge of major French cities",
+    "theme_color": "#e84393"
+  },
+  {
+    "id": 7,
+    "filename": "quiz_chunk_fake.json",
+    "title": "French Expressions Quiz 7",
+    "category": "francais",
+    "description": "Test your knowledge of major French cities",
+    "theme_color": "#e84393"
+  }
+]

@@ -1,0 +1,1071 @@
+// Import Firebase configuration, with environment variable support
+let firebaseConfig;
+try {
+  // Try to import from local file first
+  import('./firebase-config.js')
+    .then(module => {
+      firebaseConfig = module.firebaseConfig;
+      initializeFirebase();
+    })
+    .catch(error => {
+      console.error("Could not load firebase-config.js", error);
+      // Check if environment variables are available (for deployment)
+      if (typeof process !== 'undefined' && process.env) {
+        firebaseConfig = {
+          apiKey: process.env.FIREBASE_API_KEY,
+          authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.FIREBASE_APP_ID,
+          measurementId: process.env.FIREBASE_MEASUREMENT_ID
+        };
+        initializeFirebase();
+      } else {
+        console.error("No Firebase configuration available");
+      }
+    });
+} catch (e) {
+  console.error("Error setting up Firebase:", e);
+}
+
+function initializeFirebase() {
+  // Initialize Firebase with the config
+  // Your existing Firebase initialization code here
+}
+
+// DOM Elements
+const themeContainer = document.getElementById('theme-container');
+const quizList = document.getElementById('quiz-list');
+const quizDetails = document.getElementById('quiz-details');
+const quizTitle = document.getElementById('quiz-title');
+const quizDescription = document.getElementById('quiz-description');
+const backButton = document.getElementById('back-button');
+const questionCounter = document.getElementById('question-counter');
+const scoreCounter = document.getElementById('score-counter');
+const expression = document.getElementById('expression');
+const optionsContainer = document.getElementById('options-container');
+const nextQuestionButton = document.getElementById('next-question');
+const endQuizButton = document.getElementById('end-quiz');
+const quizResults = document.getElementById('quiz-results');
+const finalScore = document.getElementById('final-score').querySelector('span');
+const finalScoreNumber = document.getElementById('final-score-number');
+const totalQuestions = document.getElementById('total-questions');
+const retakeQuizButton = document.getElementById('retake-quiz');
+const appTitle = document.querySelector('.app-title');
+const themeTags = document.querySelector('.theme-tags');
+
+// Global variables
+let currentQuizData = null;
+let currentQuizQuestions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedOption = null;
+let hasAnswered = false;
+let quizzesMetadata = [];
+let currentAnswerDetails = null; // To track the current answer details element
+let currentFilter = 'all';      // Track current category filter
+let currentThemeFilter = 'all'; // Track current theme filter
+
+// Category icons mapping
+const categoryIcons = {
+    'francais': 'fa-flag',
+    'villes_france': 'fa-city',
+    'english': 'fa-coffee',
+    'spanish': 'fa-sun',
+    'italian': 'fa-pizza-slice',
+    'german': 'fa-beer'
+};
+
+// Category display names
+const categoryNames = {
+    'francais': 'French',
+    'villes_france': 'French Cities',
+    'english': 'English',
+    'spanish': 'Spanish',
+    'italian': 'Italian',
+    'german': 'German'
+};
+
+// Check if we're running from a file:// URL instead of a server
+const isLocalFile = window.location.protocol === 'file:';
+
+// Helper function to show warning if needed
+function showLocalFileWarning() {
+    if (isLocalFile) {
+        const warning = document.createElement('div');
+        warning.className = 'warning';
+        warning.innerHTML = `
+            <p><strong>Note:</strong> This app works best when served through a web server due to browser security restrictions on local files.</p>
+            <p>If you see this message or have trouble loading quizzes, please use one of these options:</p>
+            <ul>
+                <li>Use a simple local server like Python's <code>python -m http.server</code></li>
+                <li>Use VS Code's Live Server extension</li>
+                <li>Upload files to a web hosting service</li>
+            </ul>
+        `;
+        document.querySelector('header').appendChild(warning);
+    }
+}
+
+// Fetch quiz metadata
+async function fetchQuizMetadata() {
+    try {
+        // First try the standard fetch method (works on servers)
+        const response = await fetch('data/quiz_metadata.json');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching quiz metadata:', error);
+
+        // If we're running from a local file, provide fallback metadata
+        if (isLocalFile) {
+            return [
+                {
+                    "id": 1,
+                    "filename": "quiz_chunk_1_updated.json",
+                    "title": "French Expressions Quiz 1",
+                    "category": "francais",
+                    "description": "Test your knowledge of familiar French expressions",
+                    "theme_color": "#6c5ce7"
+                },
+                {
+                    "id": 2,
+                    "filename": "quiz_chunk_2_updated.json",
+                    "title": "French Expressions Quiz 2",
+                    "category": "francais",
+                    "description": "Continue learning more familiar French expressions",
+                    "theme_color": "#6c5ce7"
+                },
+                {
+                    "id": 3,
+                    "filename": "quiz_chunk_3_updated.json",
+                    "title": "French Expressions Quiz 3",
+                    "category": "francais",
+                    "description": "Expand your knowledge of French slang and idioms",
+                    "theme_color": "#6c5ce7"
+                },
+                {
+                    "id": 4,
+                    "filename": "quiz_chunk_4_updated.json",
+                    "title": "French Expressions Quiz 4",
+                    "category": "francais",
+                    "description": "Master more advanced French expressions",
+                    "theme_color": "#6c5ce7"
+                },
+                {
+                    "id": 5,
+                    "filename": "quiz_chunk_5_updated.json",
+                    "title": "French Expressions Quiz 5",
+                    "category": "francais",
+                    "description": "Challenge yourself with harder French slang",
+                    "theme_color": "#6c5ce7"
+                },
+                {
+                    "id": 6,
+                    "filename": "quiz_chunk_6_updated.json",
+                    "title": "French Expressions Quiz 6",
+                    "category": "francais",
+                    "description": "Test your expertise with complex French idioms",
+                    "theme_color": "#6c5ce7"
+                },
+                {
+                    "id": 7,
+                    "filename": "quiz_chunk_6_updated.json",
+                    "title": "French Cities Quiz",
+                    "category": "villes_france",
+                    "description": "Test your knowledge of major French cities",
+                    "theme_color": "#e84393"
+                }
+            ];
+        }
+
+        themeContainer.innerHTML = '<p class="error">Failed to load quizzes. Please try again later or consider using a web server.</p>';
+        return [];
+    }
+}
+
+// Fetch quiz data
+async function fetchQuizData(filename) {
+    try {
+        const response = await fetch(`data/${filename}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching quiz data:', error);
+        if (isLocalFile) {
+            // Show an error message specifically for local file access
+            themeContainer.innerHTML = `
+                <p class="error">Unable to load quiz data due to browser security restrictions when opening local files.</p>
+                <p>Please use a web server to serve these files instead of opening directly from your file system.</p>
+                <p>Options include:</p>
+                <ul>
+                    <li>Python: <code>python -m http.server</code></li>
+                    <li>VS Code: Live Server extension</li>
+                </ul>
+            `;
+        }
+        return [];
+    }
+}
+
+// Get all unique categories from quizzes
+function getUniqueCategories(quizzes) {
+    const categories = new Set();
+    quizzes.forEach(quiz => {
+        categories.add(quiz.category);
+    });
+    return Array.from(categories);
+}
+
+// Create category filter buttons
+function createCategoryFilters(categories) {
+    // Clear existing buttons except 'All Categories'
+    const allButton = themeTags.querySelector('.theme-tag-btn[data-theme="all"]');
+    themeTags.innerHTML = '';
+    themeTags.appendChild(allButton);
+
+    // Add a button for each unique category
+    categories.forEach(category => {
+        const categoryButton = document.createElement('button');
+        categoryButton.className = `theme-tag-btn tag-${category}`;
+        categoryButton.setAttribute('data-theme', category);
+
+        // Get category icon and display name
+        const iconClass = categoryIcons[category] || 'fa-bookmark';
+        const displayName = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ');
+
+        categoryButton.innerHTML = `<i class="fas ${iconClass}"></i> ${displayName}`;
+
+        // Add click event listener
+        categoryButton.addEventListener('click', () => filterQuizzesByCategory(category));
+
+        themeTags.appendChild(categoryButton);
+    });
+}
+
+// Filter quizzes by category
+function filterQuizzesByCategory(category) {
+    // Update current filter
+    currentFilter = category;
+
+    // Update active button
+    const themeButtons = document.querySelectorAll('.theme-tag-btn');
+    themeButtons.forEach(button => {
+        if (button.getAttribute('data-theme') === category) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+
+    // Get all theme sections
+    const themeSections = document.querySelectorAll('.theme-section');
+
+    // Show/hide theme sections based on filter
+    themeSections.forEach(section => {
+        const sectionCategory = section.getAttribute('data-theme');
+
+        if (category === 'all' || sectionCategory === category) {
+            // Show this section
+            section.classList.remove('fade-out');
+            section.style.display = 'flex';
+        } else {
+            // Hide this section with animation
+            section.classList.add('fade-out');
+            setTimeout(() => {
+                section.style.display = 'none';
+            }, 300); // Match animation duration
+        }
+    });
+
+    // Also apply theme filter if one is active
+    if (currentThemeFilter !== 'all') {
+        filterQuizzesByTheme(currentThemeFilter);
+    } else {
+        // Update filter indicator if no theme filter is active
+        updateFilterIndicator();
+    }
+}
+
+// Filter quizzes by theme
+async function filterQuizzesByTheme(theme) {
+    // Update current theme filter
+    currentThemeFilter = theme;
+
+    // Fetch all quiz data to get their themes
+    const allQuizCards = document.querySelectorAll('.card');
+
+    for (const card of allQuizCards) {
+        const quizId = parseInt(card.dataset.id);
+        const quiz = quizzesMetadata.find(q => q.id === quizId);
+
+        if (!quiz) continue;
+
+        try {
+            // Determine whether to show or hide this card based on theme
+            if (theme === 'all') {
+                // If category filter is also 'all' or matches the quiz category, show the card
+                if (currentFilter === 'all' || quiz.category === currentFilter) {
+                    card.style.display = '';
+                }
+            } else {
+                // First hide all cards
+                card.style.display = 'none';
+
+                // Then check if we need to show this one
+                const questions = await fetchQuizData(quiz.filename);
+                if (questions && questions.length > 0 && questions[0].theme === theme) {
+                    // Also check if it matches the category filter
+                    if (currentFilter === 'all' || quiz.category === currentFilter) {
+                        card.style.display = '';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching quiz data for theme filtering:', error);
+        }
+    }
+
+    // Also highlight active theme filter
+    document.querySelectorAll('.quiz-theme-badge').forEach(badge => {
+        if (badge.dataset.theme === theme) {
+            badge.classList.add('active');
+        } else {
+            badge.classList.remove('active');
+        }
+    });
+
+    // Update filter indicator
+    updateFilterIndicator();
+}
+
+// Group quizzes by category
+function groupQuizzesByCategory(quizzes) {
+    const categories = {};
+
+    quizzes.forEach(quiz => {
+        if (!categories[quiz.category]) {
+            categories[quiz.category] = [];
+        }
+
+        categories[quiz.category].push(quiz);
+    });
+
+    return categories;
+}
+
+// Display categories and quizzes
+async function displayCategoriesAndQuizzes(quizzes) {
+    themeContainer.innerHTML = '';
+
+    // Get all unique categories and create filter buttons
+    const uniqueCategories = getUniqueCategories(quizzes);
+    createCategoryFilters(uniqueCategories);
+
+    // Group quizzes by category
+    const categoryGroups = groupQuizzesByCategory(quizzes);
+
+    // Create a section for each category
+    for (const category of Object.keys(categoryGroups)) {
+        const themeSection = document.createElement('div');
+        themeSection.className = 'theme-section';
+        themeSection.setAttribute('data-theme', category);
+
+        // If filter is active and this is not the selected category, hide it
+        if (currentFilter !== 'all' && category !== currentFilter) {
+            themeSection.style.display = 'none';
+        }
+
+        // Create category header
+        const themeHeader = document.createElement('div');
+        themeHeader.className = `theme-header theme-${category}`;
+        themeHeader.setAttribute('data-theme', category);
+
+        // Get category icon or use default
+        const iconClass = categoryIcons[category] || 'fa-bookmark';
+        // Get category display name or use category key with first letter capitalized
+        const displayName = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ');
+
+        themeHeader.innerHTML = `
+            <i class="fas ${iconClass}"></i>
+            <h3>${displayName} Quizzes</h3>
+        `;
+
+        themeSection.appendChild(themeHeader);
+
+        // Create card container for quizzes in this category
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card-container';
+
+        // Add quiz cards to container
+        for (const quiz of categoryGroups[category]) {
+            // Create the quiz card asynchronously
+            const card = await createQuizCard(quiz);
+            cardContainer.appendChild(card);
+        }
+
+        themeSection.appendChild(cardContainer);
+        themeContainer.appendChild(themeSection);
+    }
+}
+
+// Create a quiz card
+async function createQuizCard(quiz) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = quiz.id;
+    card.dataset.filename = quiz.filename;
+
+    // Get category icon or use default
+    const categoryIconClass = categoryIcons[quiz.category] || 'fa-bookmark';
+
+    // Create corner accent using the theme color if specified
+    if (quiz.theme_color) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .card[data-id="${quiz.id}"]::after {
+                border-color: transparent ${quiz.theme_color} transparent transparent;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Fetch the quiz data to get its theme and count number of questions
+    let quizTheme = "";
+    let themeIconClass = "fa-bookmark"; // Default icon
+    let questionCount = 0;
+
+    try {
+        const questions = await fetchQuizData(quiz.filename);
+        if (questions && questions.length > 0) {
+            questionCount = questions.length;
+
+            if (questions[0].theme) {
+                quizTheme = questions[0].theme;
+                // You can define icons for specific quiz themes here
+                if (quizTheme === "francais_familier") {
+                    themeIconClass = "fa-comment";
+                } else if (quizTheme === "Nice") {
+                    themeIconClass = "fa-umbrella-beach";
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching quiz data for theme badge:', error);
+    }
+
+    const themeBadge = quizTheme ?
+        `<span class="quiz-theme-badge" data-theme="${quizTheme}"><i class="fas ${themeIconClass}"></i> ${quizTheme}</span>` : '';
+
+    const questionBadge = questionCount > 0 ?
+        `<span class="quiz-question-badge"><i class="fas fa-question-circle"></i> ${questionCount} Questions</span>` : '';
+
+    card.innerHTML = `
+        <div class="card-header">
+            <h3>${quiz.title}</h3>
+            <div class="badge-container">
+                ${themeBadge}
+                ${questionBadge}
+            </div>
+        </div>
+        <div class="card-body">
+            <p>${quiz.description}</p>
+            <span class="theme-tag tag-${quiz.category}"><i class="fas ${categoryIconClass}"></i> ${categoryNames[quiz.category] || quiz.category}</span>
+        </div>
+    `;
+
+    // Add click event listener to the card
+    card.addEventListener('click', () => {
+        // Force reload the quiz by first clearing the current quiz data
+        currentQuizData = null;
+        // Update URL with the quiz ID
+        window.location.hash = `quiz/${quiz.id}`;
+    });
+
+    // Add click event listener to theme badge
+    const themeBadgeElement = card.querySelector('.quiz-theme-badge');
+    if (themeBadgeElement) {
+        themeBadgeElement.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent card click event
+            filterQuizzesByTheme(quizTheme);
+        });
+    }
+
+    return card;
+}
+
+// Load a quiz by ID
+async function loadQuizById(quizId) {
+    const quiz = quizzesMetadata.find(q => q.id === parseInt(quizId));
+
+    if (!quiz) {
+        // If quiz not found, redirect to home
+        window.location.hash = '';
+        return;
+    }
+
+    await loadQuiz(quiz);
+}
+
+// Load a quiz
+async function loadQuiz(quiz) {
+    currentQuizData = quiz;
+    currentQuestionIndex = 0;
+    score = 0;
+
+    // Set quiz title and description
+    quizTitle.textContent = quiz.title;
+    quizDescription.textContent = quiz.description;
+
+    // Show loading while fetching questions
+    quizDetails.classList.remove('hidden');
+    quizList.classList.add('hidden');
+
+    // Apply theme color to quiz header if specified
+    if (quiz.theme_color) {
+        document.documentElement.style.setProperty('--primary-color', quiz.theme_color);
+
+        // Derive a lighter shade for the primary light color
+        const hexToRgb = hex => {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return [r, g, b];
+        };
+
+        const rgb = hexToRgb(quiz.theme_color);
+        const lighterColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.6)`;
+        document.documentElement.style.setProperty('--primary-light', lighterColor);
+    }
+
+    // Fetch quiz questions
+    currentQuizQuestions = await fetchQuizData(quiz.filename);
+
+    // Start the quiz if we have questions
+    if (currentQuizQuestions.length > 0) {
+        // Check if there's a question index in the URL
+        const hashParts = window.location.hash.split('/');
+        if (hashParts.length > 2 && hashParts[2] !== '') {
+            const questionIdx = parseInt(hashParts[2]);
+            if (!isNaN(questionIdx) && questionIdx >= 0 && questionIdx < currentQuizQuestions.length) {
+                currentQuestionIndex = questionIdx;
+            }
+        }
+
+        showQuestion();
+
+        // Update score and question counter
+        scoreCounter.innerHTML = `<i class="fas fa-star"></i> Score: ${score}`;
+        questionCounter.innerHTML = `<i class="fas fa-question-circle"></i> Question: ${currentQuestionIndex + 1}/${currentQuizQuestions.length}`;
+
+        // Focus on the question container
+        const questionContainer = document.getElementById('question-container');
+        if (questionContainer) {
+            // Make sure the element is focusable
+            questionContainer.setAttribute('tabindex', '-1');
+            // Set focus after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                questionContainer.focus();
+            }, 100);
+        }
+    } else {
+        // Show error if no questions loaded
+        document.getElementById('question-container').innerHTML = '<p class="error">Unable to load quiz questions. Please try using a web server.</p>';
+    }
+}
+
+// Show a question
+function showQuestion() {
+    // Reset state
+    nextQuestionButton.classList.add('hidden');
+    quizResults.classList.add('hidden');
+
+    // Remove any existing answer details from previous question
+    if (currentAnswerDetails) {
+        currentAnswerDetails.remove();
+        currentAnswerDetails = null;
+    }
+
+    hasAnswered = false;
+    selectedOption = null;
+
+    // Make sure the question container is visible
+    document.getElementById('question-container').classList.remove('hidden');
+
+    const question = currentQuizQuestions[currentQuestionIndex];
+
+    // Set question content
+    expression.textContent = question.expression;
+
+    // Create options
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.textContent = option;
+        optionElement.dataset.index = index;
+
+        optionElement.addEventListener('click', () => selectOption(optionElement, index, question.answer_index));
+        optionsContainer.appendChild(optionElement);
+    });
+
+    // Update the URL to include the question index
+    if (currentQuizData) {
+        window.location.hash = `quiz/${currentQuizData.id}/${currentQuestionIndex}`;
+    }
+
+    // Focus on the question container
+    const questionContainer = document.getElementById('question-container');
+    if (questionContainer) {
+        questionContainer.setAttribute('tabindex', '-1');
+        // Set focus after a short delay to ensure DOM is ready
+        setTimeout(() => {
+            questionContainer.focus();
+        }, 50);
+    }
+}
+
+// Create answer details element
+function createAnswerDetails(question) {
+    // Create new answer details element
+    const detailsEl = document.createElement('div');
+    detailsEl.className = 'answer-details';
+
+    detailsEl.innerHTML = `
+        <div class="answer-content">
+            <div class="translation-section">
+                <h4><i class="fas fa-language"></i> Answer</h4>
+                <p class="translation-text">${question.expression_cn || 'Translation not available'}</p>
+            </div>
+            <div class="examples-section">
+                <h4><i class="fas fa-book"></i> Example</h4>
+                <p class="example-text">${question.exemple || ''}</p>
+                <p class="translation-text">${question.exemple_cn || 'Translation not available'}</p>
+            </div>
+        </div>
+    `;
+
+    // Start with the details hidden
+    detailsEl.style.opacity = '0';
+    detailsEl.style.transform = 'translateY(10px)';
+    detailsEl.style.transition = 'all 0.3s ease';
+
+    return detailsEl;
+}
+
+// Show answer details under the selected option
+function showAnswerDetails(optionElement, question) {
+    // Remove any existing answer details
+    if (currentAnswerDetails) {
+        currentAnswerDetails.remove();
+    }
+
+    // Create new answer details
+    const detailsEl = createAnswerDetails(question);
+
+    // Check if selected option is correct and add appropriate class
+    const isCorrect = optionElement.classList.contains('correct');
+    const answerContent = detailsEl.querySelector('.answer-content');
+    if (answerContent) {
+        if (isCorrect) {
+            answerContent.classList.add('answer-correct');
+            // Add success icon for correct answer
+            const resultIcon = document.createElement('div');
+            resultIcon.className = 'result-icon correct-icon';
+            resultIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            answerContent.insertBefore(resultIcon, answerContent.firstChild);
+        } else {
+            answerContent.classList.add('answer-incorrect');
+            // Add error icon for incorrect answer
+            const resultIcon = document.createElement('div');
+            resultIcon.className = 'result-icon incorrect-icon';
+            resultIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+            answerContent.insertBefore(resultIcon, answerContent.firstChild);
+        }
+    }
+
+    // Insert after the selected option
+    optionElement.insertAdjacentElement('afterend', detailsEl);
+
+    // Add buttons to the answer details
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'button-container';
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'space-between';
+    buttonContainer.innerHTML = `
+        <button id="end-quiz" class="btn btn-secondary"><i class="fas fa-stop-circle"></i></button>
+        <button id="next-question" class="btn"><i class="fas fa-forward"></i></button>
+    `;
+    detailsEl.appendChild(buttonContainer);
+
+    // Attach event listeners to the buttons
+    buttonContainer.querySelector('#end-quiz').addEventListener('click', endQuiz);
+    buttonContainer.querySelector('#next-question').addEventListener('click', nextQuestion);
+
+    // Use setTimeout to create a slight delay before showing (for animation)
+    setTimeout(() => {
+        detailsEl.style.opacity = '1';
+        detailsEl.style.transform = 'translateY(0)';
+    }, 50);
+
+    // Store reference to current details element
+    currentAnswerDetails = detailsEl;
+
+    // Focus on the answer detail card
+    if (currentAnswerDetails) {
+        currentAnswerDetails.setAttribute('tabindex', '0');
+        setTimeout(() => {
+            currentAnswerDetails.focus();
+        }, 0);
+    }
+}
+
+// Select an option
+function selectOption(optionElement, selectedIndex, correctIndex) {
+    if (hasAnswered) return;
+
+    hasAnswered = true;
+    selectedOption = optionElement;
+
+    // Get current question
+    const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+
+    // Remove previous selections
+    document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected', 'correct', 'incorrect');
+    });
+
+    // Mark selected option
+    optionElement.classList.add('selected');
+
+    // Check if answer is correct
+    if (selectedIndex === correctIndex) {
+        optionElement.classList.add('correct');
+        score++;
+        scoreCounter.innerHTML = `<i class="fas fa-star"></i> Score: ${score}`;
+    } else {
+        optionElement.classList.add('incorrect');
+
+        // Show correct answer
+        document.querySelectorAll('.option')[correctIndex].classList.add('correct');
+
+        // Store the failed question in Firestore if user is logged in
+        if (typeof window.addFailedQuestion === 'function') {
+            // Get the selected option text
+            const selectedOptionText = currentQuestion.options[selectedIndex];
+
+            // Add the selected option to the question data
+            const questionData = {
+                ...currentQuestion,
+                selectedOption: selectedOptionText
+            };
+
+            // Save the failed question
+            window.addFailedQuestion(questionData);
+        }
+    }
+
+    // Show answer details under the selected option
+    showAnswerDetails(optionElement, currentQuizQuestions[currentQuestionIndex]);
+
+    // Ensure the selected option is focusable and focus on it
+    optionElement.setAttribute('tabindex', '0');
+    setTimeout(() => {
+        optionElement.focus();
+    }, 0);
+
+    // Show next button
+    nextQuestionButton.classList.remove('hidden');
+}
+
+// Go to next question
+function nextQuestion() {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < currentQuizQuestions.length) {
+        // Show next question
+        showQuestion();
+        // Update question counter
+        questionCounter.innerHTML = `<i class="fas fa-question-circle"></i> Question: ${currentQuestionIndex + 1}/${currentQuizQuestions.length}`;
+        // Focus will be handled by showQuestion
+    } else {
+        // Show quiz results
+        showResults();
+
+        // Focus on the quiz results section
+        const quizResults = document.getElementById('quiz-results');
+        if (quizResults) {
+            quizResults.setAttribute('tabindex', '-1');
+            setTimeout(() => {
+                quizResults.focus();
+            }, 50);
+        }
+    }
+}
+
+// End the quiz early
+function endQuiz() {
+    // Confirm that the user wants to end the quiz
+    const confirmed = confirm("Are you sure you want to end the quiz?");
+
+    if (confirmed) {
+        showResults();
+    }
+}
+
+// Show quiz results
+function showResults() {
+    // Hide question container
+    document.getElementById('question-container').classList.add('hidden');
+    nextQuestionButton.classList.remove('hidden');
+    nextQuestionButton.classList.add('hidden');
+
+    // Remove any existing answer details
+    if (currentAnswerDetails) {
+        currentAnswerDetails.remove();
+        currentAnswerDetails = null;
+    }
+
+    // Show results
+    const resultsContainer = document.getElementById('quiz-results');
+    resultsContainer.classList.remove('hidden');
+    finalScore.textContent = `${score}/${currentQuizQuestions.length}`;
+    finalScoreNumber.textContent = score;
+    totalQuestions.textContent = currentQuizQuestions.length;
+
+    // Update URL to show results
+    if (currentQuizData) {
+        window.location.hash = `quiz/${currentQuizData.id}/results`;
+    }
+
+    // Make results container focusable and focus on it
+    resultsContainer.setAttribute('tabindex', '-1');
+    setTimeout(() => {
+        resultsContainer.focus();
+    }, 50);
+}
+
+// Retake quiz
+function retakeQuiz() {
+    // Reset quiz
+    currentQuestionIndex = 0;
+    score = 0;
+    scoreCounter.innerHTML = `<i class="fas fa-star"></i> Score: 0`;
+    questionCounter.innerHTML = `<i class="fas fa-question-circle"></i> Question: 1/${currentQuizQuestions.length}`;
+
+    // Show first question
+    document.getElementById('question-container').classList.remove('hidden');
+    quizResults.classList.add('hidden');
+    showQuestion();
+}
+
+// Go back to quiz list
+function goBackToQuizList() {
+    quizList.classList.remove('hidden');
+    quizDetails.classList.add('hidden');
+
+    // Restore default colors
+    document.documentElement.style.removeProperty('--primary-color');
+    document.documentElement.style.removeProperty('--primary-light');
+
+    // Update URL
+    window.location.hash = '';
+}
+
+// Go to homepage
+function goToHomepage() {
+    window.location.hash = '';
+}
+
+// Handle URL routing
+function handleRouting() {
+    const hash = window.location.hash.substring(1); // Remove the # character
+
+    if (!hash || hash === '') {
+        // Show the quiz list
+        quizList.classList.remove('hidden');
+        quizDetails.classList.add('hidden');
+
+        // Restore default colors
+        document.documentElement.style.removeProperty('--primary-color');
+        document.documentElement.style.removeProperty('--primary-light');
+        return;
+    }
+
+    const parts = hash.split('/');
+
+    if (parts[0] === 'quiz' && parts.length > 1) {
+        const quizId = parts[1];
+
+        // If we're already on the correct quiz, just update the question
+        if (currentQuizData && currentQuizData.id === parseInt(quizId)) {
+            if (parts.length > 2) {
+                if (parts[2] === 'results') {
+                    showResults();
+                } else {
+                    const questionIdx = parseInt(parts[2]);
+                    if (!isNaN(questionIdx) && questionIdx >= 0 && questionIdx < currentQuizQuestions.length) {
+                        currentQuestionIndex = questionIdx;
+                        showQuestion();
+                        questionCounter.innerHTML = `<i class="fas fa-question-circle"></i> Question: ${currentQuestionIndex + 1}/${currentQuizQuestions.length}`;
+                    }
+                }
+            }
+        } else {
+            // Load the quiz if it's different from the current one
+            loadQuizById(quizId);
+        }
+    }
+}
+
+// Set up category filter event listeners
+function setupCategoryFilters() {
+    // Set up the All Categories button
+    const allButton = document.querySelector('.theme-tag-btn[data-theme="all"]');
+    if (allButton) {
+        allButton.addEventListener('click', () => {
+            filterQuizzesByCategory('all');
+            // Also reset theme filter
+            currentThemeFilter = 'all';
+            document.querySelectorAll('.quiz-theme-badge').forEach(badge => {
+                badge.classList.remove('active');
+            });
+            // Update filter indicator
+            updateFilterIndicator();
+        });
+    }
+
+    // Set up Clear Filters button
+    const clearFiltersButton = document.getElementById('clear-filters');
+    if (clearFiltersButton) {
+        clearFiltersButton.addEventListener('click', () => {
+            // Reset both category and theme filters
+            currentFilter = 'all';
+            currentThemeFilter = 'all';
+
+            // Update UI to reflect reset filters
+            document.querySelectorAll('.theme-tag-btn').forEach(button => {
+                if (button.getAttribute('data-theme') === 'all') {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.quiz-theme-badge').forEach(badge => {
+                badge.classList.remove('active');
+            });
+
+            // Show all theme sections
+            document.querySelectorAll('.theme-section').forEach(section => {
+                section.classList.remove('fade-out');
+                section.style.display = 'flex';
+            });
+
+            // Show all cards that were hidden
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.display = '';
+            });
+
+            // Update filter indicator
+            updateFilterIndicator();
+        });
+    }
+}
+
+// Update filter indicator
+function updateFilterIndicator() {
+    const clearFiltersButton = document.getElementById('clear-filters');
+    if (clearFiltersButton) {
+        if (currentFilter !== 'all' || currentThemeFilter !== 'all') {
+            clearFiltersButton.classList.add('active');
+            const activeFilters = (currentFilter !== 'all' ? 1 : 0) + (currentThemeFilter !== 'all' ? 1 : 0);
+            clearFiltersButton.innerHTML = `<i class="fas fa-times-circle"></i> Clear Filters (${activeFilters})`;
+        } else {
+            clearFiltersButton.classList.remove('active');
+            clearFiltersButton.innerHTML = `<i class="fas fa-times-circle"></i> Clear All Filters`;
+        }
+    }
+}
+
+// Event listeners
+backButton.addEventListener('click', goBackToQuizList);
+nextQuestionButton.addEventListener('click', nextQuestion);
+endQuizButton.addEventListener('click', endQuiz);
+retakeQuizButton.addEventListener('click', retakeQuiz);
+appTitle.addEventListener('click', goToHomepage);
+window.addEventListener('hashchange', handleRouting);
+
+// Initialize application
+async function initApp() {
+    showLocalFileWarning();
+    setupCategoryFilters();
+    quizzesMetadata = await fetchQuizMetadata();
+    await displayCategoriesAndQuizzes(quizzesMetadata);
+
+    // Handle initial routing
+    handleRouting();
+}
+
+// Start the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', initApp);
+
+// Add loadCustomQuiz function for failed questions quiz
+function loadCustomQuiz(quiz) {
+    // Store quiz data
+    currentQuizData = quiz;
+    currentQuizQuestions = quiz.questions;
+    currentQuestionIndex = 0;
+    score = 0;
+
+    // Set quiz details
+    quizTitle.textContent = quiz.title;
+    quizDescription.textContent = quiz.description;
+
+    // Update colors
+    if (quiz.theme_color) {
+        document.documentElement.style.setProperty('--primary-color', quiz.theme_color);
+        // Generate a lighter version of the theme color
+        const lighterColor = getLighterColor(quiz.theme_color, 20);
+        document.documentElement.style.setProperty('--primary-light', lighterColor);
+    }
+
+    // Reset counters
+    scoreCounter.innerHTML = `<i class="fas fa-star"></i> Score: 0`;
+    questionCounter.innerHTML = `<i class="fas fa-question-circle"></i> Question: 1/${currentQuizQuestions.length}`;
+
+    // Hide quiz list, show quiz details
+    quizList.style.display = 'none';
+    quizDetails.classList.remove('hidden');
+    document.getElementById('question-container').classList.remove('hidden');
+    quizResults.classList.add('hidden');
+
+    // Set focus to quiz details
+    quizDetails.setAttribute('tabindex', '-1');
+    setTimeout(() => {
+        quizDetails.focus();
+    }, 100);
+
+    // Show first question
+    showQuestion();
+}
+
+// Utility function to lighten a hex color
+function getLighterColor(hex, percent) {
+    // Parse hex to RGB
+    let r = parseInt(hex.slice(1, 3), 16);
+    let g = parseInt(hex.slice(3, 5), 16);
+    let b = parseInt(hex.slice(5, 7), 16);
+
+    // Make lighter by the percent
+    r = Math.min(255, Math.floor(r * (1 + percent / 100)));
+    g = Math.min(255, Math.floor(g * (1 + percent / 100)));
+    b = Math.min(255, Math.floor(b * (1 + percent / 100)));
+
+    // Convert back to hex
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
+// Make loadCustomQuiz available globally for the failed questions feature
+window.loadCustomQuiz = loadCustomQuiz;
