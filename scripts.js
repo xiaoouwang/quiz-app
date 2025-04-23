@@ -709,13 +709,24 @@ function showAnswerDetails(optionElement, question) {
     // Store reference to current details element
     currentAnswerDetails = detailsEl;
 
-    // Focus on the answer detail card
-    if (currentAnswerDetails) {
-        currentAnswerDetails.setAttribute('tabindex', '0');
+    // Make the answer details focusable
+    detailsEl.setAttribute('tabindex', '0');
+
+    // Scroll the answer details into view for mobile users
+    detailsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Focus on the answer detail card with a slight delay to ensure scrolling completes first
+    setTimeout(() => {
+        detailsEl.focus();
+
+        // For mobile: add touch highlight or outline to make it clear where focus is
+        detailsEl.style.outline = '2px solid var(--primary-color)';
+
+        // Remove outline after a short time
         setTimeout(() => {
-            currentAnswerDetails.focus();
-        }, 0);
-    }
+            detailsEl.style.outline = '';
+        }, 1000);
+    }, 300);
 }
 
 // Select an option
@@ -763,14 +774,11 @@ function selectOption(optionElement, selectedIndex, correctIndex) {
         }
     }
 
+    // Ensure the selected option is visible
+    optionElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
     // Show answer details under the selected option
     showAnswerDetails(optionElement, currentQuizQuestions[currentQuestionIndex]);
-
-    // Ensure the selected option is focusable and focus on it
-    optionElement.setAttribute('tabindex', '0');
-    setTimeout(() => {
-        optionElement.focus();
-    }, 0);
 
     // Show next button
     nextQuestionButton.classList.remove('hidden');
