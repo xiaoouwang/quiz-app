@@ -17,106 +17,54 @@ async function loadFirebaseConfig() {
       return decryptConfig(configEncrypted, getConfigPassword());
     }
 
-    // Option 3: Generate configuration from heavily obfuscated parts
-    // This uses multiple techniques to hide the configuration values
-    try {
-      return constructFirebaseConfig();
-    } catch (e) {
-      console.error("Failed to construct Firebase config", e);
-      return null;
-    }
+    // Option 3: Generate configuration with moderate obfuscation
+    // This uses simple encoding and string operations to hide values
+    return createFirebaseConfig();
   } catch (error) {
     console.error('Error loading Firebase configuration:', error);
     return null;
   }
 }
 
-// Advanced obfuscation for Option 3
-function constructFirebaseConfig() {
-  // Create an array of characters that will form the API key
-  const apiKeyChars = [
-    String.fromCharCode(65, 73, 122, 97),  // "AIza"
-    String.fromCharCode(83, 121),          // "Sy"
-    getKeyFragment(0),                     // Complex fragment
-    String.fromCharCode(82, 76, 107, 84),  // "RLkT"
-    getKeyFragment(1),                     // Complex fragment
-    String.fromCharCode(90, 69, 56)        // "ZE8"
+// Create Firebase config from encoded parts
+function createFirebaseConfig() {
+  // Base64 encoded parts of the config
+  const encodedParts = [
+    "QUl6YVN5Q2RYQmxWcjVSTGtUV1J3dWRJWi0zSEk3TFBiVXgyWkU4", // API Key
+    "cXVpei05OThlYi5maXJlYmFzZWFwcC5jb20=", // Auth Domain
+    "cXVpei05OThlYg==", // Project ID
+    "cXVpei05OThlYi5maXJlYmFzZXN0b3JhZ2UuYXBw", // Storage Bucket
+    "MTY2MDExODAwNDg0", // Messaging Sender ID
+    "MToxNjYwMTE4MDA0ODQ6d2ViOjkxNTgzNWVlMWJjZGVlMjIyZDhmMzE=", // App ID
+    "Ry1MWTVYTjdDWVQ0" // Measurement ID
   ];
 
-  // Project ID with character manipulation
-  const projectIdComponents = ["q", "u", "i", "z", "-", "9", "9", "8", "e", "b"];
-  const projectId = projectIdComponents.reverse().reverse().join('');
+  // Decode the parts
+  const apiKey = atob(encodedParts[0]);
+  const authDomain = atob(encodedParts[1]);
+  const projectId = atob(encodedParts[2]);
+  const storageBucket = atob(encodedParts[3]);
+  const messagingSenderId = atob(encodedParts[4]);
+  const appId = atob(encodedParts[5]);
+  const measurementId = atob(encodedParts[6]);
 
-  // App ID with character manipulation and encoding
-  const appIdParts = [
-    "1:",
-    getMsgSenderId(),
-    ":web:",
-    reverseString("13f8d222eedcb1ee538519")
-  ];
-
-  return {
-    apiKey: apiKeyChars.join(''),
-    authDomain: `${projectId}.firebaseapp.com`,
-    projectId: projectId,
-    storageBucket: `${projectId}.${getStorageDomain()}`,
-    messagingSenderId: getMsgSenderId(),
-    appId: appIdParts.join(''),
-    measurementId: window.atob("Ry1MWTVYTjdDWVQ0")
+  // Create and validate the config object
+  const config = {
+    apiKey,
+    authDomain,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
+    measurementId
   };
-}
 
-// Helper functions with additional obfuscation
-function getKeyFragment(index) {
-  // Create fragments of the key through computation rather than direct string
-  const fragments = [
-    // Fragment computation for "CdXBl"
-    String.fromCharCode(67, 100, 88, 66, 108),
-    // Fragment computation for "Wr5RLkTWRwudIZ-3HI7LPbUx2"
-    String.fromCharCode(87, 114, 53) + String.fromCharCode(87, 82, 119, 117, 100, 73) +
-    String.fromCharCode(90, 45, 51, 72, 73, 55, 76, 80, 98, 85, 120, 50)
-  ];
-
-  // Extra obfuscation by running the fragment through a processing function
-  return processKeyFragment(fragments[index]);
-}
-
-function processKeyFragment(fragment) {
-  // This function doesn't actually change anything, but makes the code more complex
-  // to analyze and potentially could be used to add more security in the future
-  let result = '';
-  for (let i = 0; i < fragment.length; i++) {
-    // XOR with 0 doesn't change anything but makes static analysis harder
-    const charCode = fragment.charCodeAt(i) ^ 0;
-    result += String.fromCharCode(charCode);
+  // Validate config (make sure at least the API key looks valid)
+  if (!config.apiKey || !config.apiKey.startsWith('AIza')) {
+    throw new Error('Invalid Firebase configuration generated');
   }
-  return result;
-}
 
-function getStorageDomain() {
-  // Return domain through concatenation instead of a direct string
-  return ["f", "i", "r", "e", "b", "a", "s", "e", "s", "t", "o", "r", "a", "g", "e", ".", "a", "p", "p"]
-    .join('');
-}
-
-function getMsgSenderId() {
-  // Use an algorithm to generate the sender ID
-  return (1660 * 100000 + 11800 + 484).toString();
-}
-
-function getAppId() {
-  // Just a placeholder - we use a different approach in constructFirebaseConfig
-  return "1:166011800484:web:915835ee1bcdee222d8f31";
-}
-
-function getMeasurementId() {
-  // Just a placeholder - we use a different approach in constructFirebaseConfig
-  return "G-LY5XN7CYT4";
-}
-
-// Utility function to reverse a string - used in obfuscation
-function reverseString(str) {
-  return str.split('').reverse().join('');
+  return config;
 }
 
 // If using encryption approach
@@ -144,6 +92,20 @@ function setupEncryptedConfig(configObject, password) {
   const encrypted = btoa(configString); // This is not secure, just an example
   localStorage.setItem('firebase_config_encrypted', encrypted);
   console.log("Config stored securely.");
+}
+
+// Console logging for debugging
+function debugConfig(config) {
+  if (!config) {
+    console.error("Firebase configuration is null or undefined");
+    return;
+  }
+
+  // Log partial key info for debugging without exposing entire key
+  console.log("API Key starts with:", config.apiKey.substring(0, 8) + "...");
+  console.log("Auth Domain:", config.authDomain);
+  console.log("Project ID:", config.projectId);
+  // Other fields are implied to be working if these are correct
 }
 
 // Export the function
