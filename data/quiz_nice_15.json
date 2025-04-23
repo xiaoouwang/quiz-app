@@ -1,0 +1,212 @@
+[
+  {
+    "expression": "Quelle est la spécialité culinaire emblématique de Nice ?",
+    "expression_cn": "La socca (鹰嘴豆煎饼)",
+    "options": [
+      "La bouillabaisse (马赛鱼汤)",
+      "La choucroute (德式酸菜炖肉)",
+      "La socca (鹰嘴豆煎饼)",
+      "Le cassoulet (卡苏莱焖豆肉锅)"
+    ],
+    "answer_index": 2,
+    "exemple": "La socca, c’est une crêpe fine à base de farine de pois chiche, cuite au feu de bois et servie bien chaude.",
+    "exemple_cn": "Socca 是一种用鹰嘴豆粉做的煎饼，在柴火炉里烤得香喷喷，外酥内软，一边吃一边舔手指才地道！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Comment s’appelle la célèbre promenade au bord de la mer à Nice ?",
+    "expression_cn": "Promenade des Anglais (英国人散步道)",
+    "options": [
+      "Promenade de la Plage (海滩散步道)",
+      "Promenade des Anglais (英国人散步道)",
+      "Promenade Méditerranéenne (地中海散步道)",
+      "Promenade Riviera (蔚蓝海岸散步道)"
+    ],
+    "answer_index": 1,
+    "exemple": "Cette promenade a été financée par les riches Anglais qui venaient passer l’hiver à Nice au XIXe siècle.",
+    "exemple_cn": "这条散步道是19世纪那些来尼斯过冬的英国土豪出资修的，从那时起，尼斯就成了“海景养老胜地”的代名词！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quelle langue régionale parle-t-on traditionnellement à Nice ?",
+    "expression_cn": "Le niçois (尼斯语)",
+    "options": [
+      "Le provençal (普罗旺斯语)",
+      "Le niçois (尼斯语)",
+      "Le catalan (加泰罗尼亚语)",
+      "Le corse (科西嘉语)"
+    ],
+    "answer_index": 1,
+    "exemple": "Le niçois est un dialecte occitan, chantant et coloré. Des mots comme “pan bagnat” ou “cagaïre” font partie du folklore local.",
+    "exemple_cn": "尼斯语是一种奥克语方言，说起来像在唱歌，还有很多搞笑词，比如“cagaïre”（拉屎的）...太接地气了！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel événement important a lieu à Nice en février ?",
+    "expression_cn": "Le Carnaval de Nice (尼斯狂欢节)",
+    "options": [
+      "Le Festival de Cannes (戛纳电影节)",
+      "La Fête du Citron (柠檬节)",
+      "Le Carnaval de Nice (尼斯狂欢节)",
+      "Le Marathon des Alpes-Maritimes (滨海阿尔卑斯马拉松)"
+    ],
+    "answer_index": 2,
+    "exemple": "Le Carnaval de Nice est l’un des plus célèbres d’Europe. Il y a des chars gigantesques, des confettis partout et une ambiance de folie !",
+    "exemple_cn": "尼斯狂欢节是欧洲最出名的之一，花车超大，五彩纸屑漫天飞，整个城市都在开趴，嗨到飞起！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel artiste célèbre a vécu à Nice pendant plus de 30 ans ?",
+    "expression_cn": "Le musée Matisse (马蒂斯博物馆)",
+    "options": [
+      "Claude Monet (莫奈)",
+      "Pablo Picasso (毕加索)",
+      "Henri Matisse (马蒂斯)",
+      "Vincent Van Gogh (梵高)"
+    ],
+    "answer_index": 2,
+    "exemple": "Matisse a trouvé à Nice une lumière unique qui l’a inspiré pendant des décennies.",
+    "exemple_cn": "马蒂斯爱上了尼斯的光线，一住就是几十年。现在可以在马蒂斯博物馆里看到他那“阳光灿烂”的作品！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel parc naturel se trouve juste derrière Nice ?",
+    "expression_cn": "Parc du Mercantour (梅尔康图尔国家公园)",
+    "options": [
+      "Parc national des Écrins (艾克兰国家公园)",
+      "Parc du Mercantour (梅尔康图尔国家公园)",
+      "Parc du Luberon (吕贝隆公园)",
+      "Parc des Calanques (卡朗格公园)"
+    ],
+    "answer_index": 1,
+    "exemple": "À une heure de route, tu passes de la plage aux marmottes. C’est la magie de Nice !",
+    "exemple_cn": "从尼斯开车一小时就能上山看土拨鼠，早上海边晒太阳，下午雪地里看动物，一天两种人生！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quelle est la couleur dominante des bâtiments de la place Masséna ?",
+    "expression_cn": "Place Masséna (马塞纳广场) 建筑的主色调是什么？",
+    "options": [
+      "Bleu (蓝色)",
+      "Rouge (红色)",
+      "Jaune (黄色)",
+      "Vert (绿色)"
+    ],
+    "answer_index": 1,
+    "exemple": "Les façades rouges de la place Masséna donnent à la ville un côté chic et ensoleillé.",
+    "exemple_cn": "广场上的红色立面让整座城市看起来又有格调又充满阳光，拍照简直是ins爆款滤镜！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel fruit est essentiel dans la cuisine niçoise ?",
+    "expression_cn": "L’olive (橄榄)",
+    "options": [
+      "Le citron (柠檬)",
+      "L’olive (橄榄)",
+      "La tomate (番茄)",
+      "L’abricot (杏子)"
+    ],
+    "answer_index": 1,
+    "exemple": "Les Niçois en mettent partout : dans les salades, les sauces, les pains... même dans les disputes culinaires !",
+    "exemple_cn": "橄榄在尼斯就是“万能调味王”，哪里都能加。有人敢在沙拉里不放橄榄？那简直是在挑衅当地人的底线！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel est le nom du plat niçois avec du pain, du thon et des légumes ?",
+    "expression_cn": "Le pan bagnat (尼斯浸面包)",
+    "options": [
+      "La quiche lorraine (洛林咸派)",
+      "Le pan bagnat (尼斯浸面包)",
+      "Le croque-monsieur (法式烤三明治)",
+      "La tartiflette (奶酪焗土豆)"
+    ],
+    "answer_index": 1,
+    "exemple": "C’est comme une salade niçoise mais dans du pain rond bien imbibé d’huile d’olive.",
+    "exemple_cn": "pan bagnat 就是“面包版”的尼斯沙拉，橄榄油浸得透透的，一口咬下去幸福感爆棚，吃完立刻想搬来住！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quelle équipe de foot représente Nice ?",
+    "expression_cn": "OGC Nice (尼斯体育俱乐部)",
+    "options": [
+      "FC Marseille (马赛足球俱乐部)",
+      "OGC Nice (尼斯体育俱乐部)",
+      "AS Monaco (摩纳哥足球俱乐部)",
+      "PSG Sud (南方巴黎队 🤪)"
+    ],
+    "answer_index": 1,
+    "exemple": "L’OGC Nice est le club local, avec des supporters fidèles et un stade flambant neuf : l’Allianz Riviera.",
+    "exemple_cn": "OGC Nice 是本地人最骄傲的球队，主场Allianz球场又大又新，球迷热情得能把看台都喊塌！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel musée est dédié à Henri Matisse à Nice ?",
+    "expression_cn": "Musée Matisse (马蒂斯博物馆)",
+    "options": [
+      "Musée Picasso (毕加索博物馆)",
+      "Musée Chagall (夏加尔博物馆)",
+      "Musée Matisse (马蒂斯博物馆)",
+      "Musée Masséna (马塞纳博物馆)"
+    ],
+    "answer_index": 2,
+    "exemple": "Le musée Matisse se trouve sur les hauteurs de Cimiez et regroupe ses œuvres colorées inspirées par la lumière niçoise.",
+    "exemple_cn": "马蒂斯博物馆在Cimiez高地，里面全是他受尼斯阳光启发创作的缤纷作品，走进去像进了彩虹世界！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel est le surnom affectueux de Nice ?",
+    "expression_cn": "Nissa Bella (美丽的尼斯)",
+    "options": [
+      "La Jolie (小美人)",
+      "Nissa Bella (美丽的尼斯)",
+      "La Bleue (蔚蓝女神)",
+      "La Méditerranéenne (地中海小姐)"
+    ],
+    "answer_index": 1,
+    "exemple": "Nissa Bella veut dire 'Nice la belle' en niçois. C’est aussi une chanson chantée lors des matchs de foot.",
+    "exemple_cn": "Nissa Bella 是尼斯语里的“尼斯小美人”，还是球迷在比赛中齐声高唱的战歌，感情超到位！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quel dessert glacé a été inventé à Nice ?",
+    "expression_cn": "La coupe Colonel (上校圣代)",
+    "options": [
+      "La glace à la lavande (薰衣草冰淇淋)",
+      "Le nougat glacé (冻牛轧糖)",
+      "Le pain de Gênes (热那亚蛋糕)",
+      "La coupe Colonel (上校圣代)"
+    ],
+    "answer_index": 3,
+    "exemple": "La coupe Colonel, c’est un sorbet citron avec de la vodka. Frais, piquant et classe.",
+    "exemple_cn": "上校圣代是柠檬冰沙加伏特加，一口下去清凉带劲，夏天吃它感觉能立刻提神醒脑！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quelle rue niçoise est connue pour ses restaurants animés ?",
+    "expression_cn": "Rue Masséna (马塞纳街)",
+    "options": [
+      "Rue Masséna (马塞纳街)",
+      "Rue Victor Hugo (雨果街)",
+      "Rue de France (法国街)",
+      "Rue Garibaldi (加里波第街)"
+    ],
+    "answer_index": 0,
+    "exemple": "La rue Masséna est piétonne, pleine de restos et toujours vivante, jour comme nuit.",
+    "exemple_cn": "马塞纳街是步行街，餐厅挤挤挨挨，白天晚上都热闹，是吃货的天堂！",
+    "theme": "Nice"
+  },
+  {
+    "expression": "Quelle ville frontalière est accessible facilement depuis Nice ?",
+    "expression_cn": "Menton (芒通)",
+    "options": [
+      "Cannes (戛纳)",
+      "Antibes (昂蒂布)",
+      "Menton (芒通)",
+      "Toulon (土伦)"
+    ],
+    "answer_index": 2,
+    "exemple": "Menton est juste à côté de l’Italie, connue pour ses jardins et son festival du citron.",
+    "exemple_cn": "芒通靠近意大利，有美丽的花园和柠檬节，是一座散步吃柠檬派的悠闲小镇！",
+    "theme": "Nice"
+  }
+]

@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>French Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Auth modal styles */
+    .auth-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-btn {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-btn:hover {
+      background: #fff;
+      color: #7048e8;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      margin-left: 15px;
+    }
+
+    .user-info i {
+      margin-right: 8px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0);
+    }
+
+    .auth-modal h3 {
+      margin-top: 0;
+      color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-modal h3 i {
+      margin-right: 10px;
+      color: #7048e8;
+    }
+
+    .auth-form input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .auth-form input:focus {
+      outline: none;
+      border-color: #7048e8;
+    }
+
+    .auth-form button {
+      width: 100%;
+      padding: 12px;
+      background: #7048e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .auth-form button:hover {
+      background: #5a35c8;
+    }
+
+    .auth-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+
+    .auth-links a {
+      color: #7048e8;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .auth-links a:hover {
+      text-decoration: underline;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.2rem;
+      color: #999;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    /* Failed questions section */
+    #failed-questions-section {
+      display: none;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #failed-questions-section h3 {
+      display: flex;
+      align-items: center;
+      color: #333;
+      margin-top: 0;
+    }
+
+    #failed-questions-section h3 i {
+      margin-right: 10px;
+      color: #e74c3c;
+    }
+
+    #failed-questions-list {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0;
+    }
+
+    .failed-question-item {
+      background: #f8f9fa;
+      border-left: 3px solid #e74c3c;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .failed-question-expression {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .failed-question-answers {
+      display: flex;
+      margin-top: 8px;
+    }
+
+    .failed-question-wrong {
+      color: #e74c3c;
+      margin-right: 15px;
+    }
+
+    .failed-question-correct {
+      color: #2ecc71;
+    }
+
+    .failed-question-btn {
+      background: #7048e8;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.3s ease;
+    }
+
+    .failed-question-btn:hover {
+      background: #5a35c8;
+    }
+
+    /* User menu styles */
+    .user-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-menu-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 45px;
+      min-width: 200px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .user-menu.active .user-menu-content {
+      display: block;
+    }
+
+    .user-menu-item {
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      color: #333;
+      transition: background 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .user-menu-item:hover {
+      background: #f5f5f5;
+    }
+
+    .user-menu-item i {
+      margin-right: 10px;
+      color: #7048e8;
+      width: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <a href="#" class="app-title">
+        <h1><i class="fas fa-brain"></i>French Quiz App</h1>
+        <p>All the little things around French</p>
+      </a>
+
+      <!-- Auth Container -->
+      <div class="auth-container">
+        <div id="user-info" class="user-info" style="display: none;">
+          <div class="user-menu">
+            <div class="user-menu-trigger" id="user-menu-trigger">
+              <i class="fas fa-user-circle"></i>
+              <span id="user-email"></span>
+              <i class="fas fa-chevron-down" style="font-size: 0.8em; margin-left: 5px;"></i>
+            </div>
+            <div class="user-menu-content">
+              <div class="user-menu-item" id="failed-questions-btn">
+                <i class="fas fa-exclamation-circle"></i> Failed Questions
+              </div>
+              <div class="user-menu-item" id="user-logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="login-button" class="auth-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <button id="register-button" class="auth-btn"><i class="fas fa-user-plus"></i> Register</button>
+        <button id="logout-button" class="auth-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i>
+          Logout</button>
+        <button id="guest-button" class="auth-btn"><i class="fas fa-user-secret"></i> Guest</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Modals -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="auth-modal">
+      <button class="close-modal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-sign-in-alt"></i> Login</h3>
+      <form class="auth-form" id="login-form">
+        <input type="email" id="login-email" placeholder="Email Address" required>
+        <input type="password" id="login-pass" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="auth-links">
+        <a id="to-register">Need an account? Register</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="register-modal" class="modal-overlay">
+    <div class="auth-modal">
+      <button class="close-modal"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-user-plus"></i> Create Account</h3>
+      <form class="auth-form" id="register-form">
+        <input type="email" id="reg-email" placeholder="Email Address" required>
+        <input type="password" id="reg-pass" placeholder="Password (6+ characters)" required>
+        <button type="submit">Create Account</button>
+      </form>
+      <div class="auth-links">
+        <a id="to-login">Already have an account? Login</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section id="quiz-list">
+      <!-- <h2><i class="fas fa-list-alt"></i> Quiz Collection</h2> -->
+
+      <div id="theme-filter">
+        <div class="filter-label">
+          <i class="fas fa-filter"></i> Filter by theme:
+        </div>
+        <div class="theme-tags">
+          <button class="theme-tag-btn active" data-theme="all">
+            <i class="fas fa-globe"></i> All Themes
+          </button>
+          <!-- Theme tags will be dynamically added here -->
+        </div>
+        <button id="clear-filters" class="btn btn-small">
+          <i class="fas fa-times-circle"></i> Clear All Filters
+        </button>
+      </div>
+
+      <div id="theme-container">
+        <!-- Themes will be dynamically added here -->
+        <div class="loader"></div>
+      </div>
+    </section>
+
+    <section id="quiz-details" class="hidden">
+      <div class="quiz-header">
+        <button id="back-button" class="btn"><i class="fas fa-arrow-left"></i> Back to Quizzes</button>
+        <h2 id="quiz-title">Quiz Title</h2>
+        <p id="quiz-description">Quiz Description</p>
+      </div>
+      <div id="quiz-content">
+        <div class="button-container" style="display: flex; justify-content: space-between;">
+          <button id="end-quiz" class="btn btn-secondary"><i class="fas fa-stop-circle"></i></button>
+          <button id="next-question" class="btn"><i class="fas fa-forward"></i></button>
+        </div>
+        <div id="question-container">
+          <div id="quiz-stats">
+            <span id="question-counter"><i class="fas fa-question-circle"></i> Question: 0/0</span>
+            <span id="score-counter"><i class="fas fa-star"></i> Score: 0</span>
+          </div>
+          <h3 id="expression"></h3>
+          <div id="options-container">
+            <!-- Options will be dynamically added here -->
+            <!-- Answer details will be added directly after the selected option -->
+          </div>
+        </div>
+        <div id="quiz-results" class="hidden">
+          <div class="results-content">
+            <h3><i class="fas fa-trophy"></i> Quiz Complete!</h3>
+            <div class="score-display">
+              <div class="score-circle">
+                <span id="final-score-number">0</span>
+                <span class="score-divider">/</span>
+                <span id="total-questions">0</span>
+              </div>
+            </div>
+            <p id="final-score">Your score: <span>0/0</span></p>
+            <button id="retake-quiz" class="btn"><i class="fas fa-redo"></i> Retake Quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Failed Questions Section -->
+    <section id="failed-questions-section">
+      <div class="failed-questions-header">
+        <h3><i class="fas fa-exclamation-circle"></i> Your Failed Questions</h3>
+        <p>Practice these questions to improve your knowledge</p>
+      </div>
+      <ul id="failed-questions-list">
+        <!-- Failed questions will be added here dynamically -->
+      </ul>
+      <button id="practice-failed-btn" class="failed-question-btn">
+        <i class="fas fa-redo"></i> Practice Failed Questions
+      </button>
+      <button id="clear-failed-btn" class="failed-question-btn" style="background-color: #e74c3c;">
+        <i class="fas fa-trash"></i> Clear All Failed Questions
+      </button>
+      <button id="back-to-quizzes-btn" class="failed-question-btn" style="background-color: #3498db;">
+        <i class="fas fa-arrow-left"></i> Back to Quizzes
+      </button>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p><i class="fas fa-code"></i> Quiz Project &copy; 2025</p>
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Firebase SDK (modules)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signInAnonymously, signOut,
+      createUserWithEmailAndPassword, signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    import {
+      getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc,
+      arrayUnion, arrayRemove, enableIndexedDbPersistence, CACHE_SIZE_UNLIMITED
+    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Enable offline persistence
+    enableIndexedDbPersistence(db)
+      .then(() => {
+        console.log("Offline persistence enabled");
+      })
+      .catch((err) => {
+        if (err.code === 'failed-precondition') {
+          console.warn("Multiple tabs open, persistence can only be enabled in one tab at a time");
+        } else if (err.code === 'unimplemented') {
+          console.warn("Browser doesn't support IndexedDB persistence");
+        }
+      });
+
+    // Local storage fallback for failed questions
+    const LOCAL_STORAGE_KEY = 'quiz_failed_questions';
+
+    // DOM Elements
+    const loginModal = document.getElementById('login-modal');
+    const registerModal = document.getElementById('register-modal');
+    const loginButton = document.getElementById('login-button');
+    const registerButton = document.getElementById('register-button');
+    const logoutButton = document.getElementById('logout-button');
+    const guestButton = document.getElementById('guest-button');
+    const toRegister = document.getElementById('to-register');
+    const toLogin = document.getElementById('to-login');
+    const closeButtons = document.querySelectorAll('.close-modal');
+    const userInfo = document.getElementById('user-info');
+    const userEmail = document.getElementById('user-email');
+    const userMenuTrigger = document.getElementById('user-menu-trigger');
+    const userLogoutBtn = document.getElementById('user-logout-btn');
+    const failedQuestionsBtn = document.getElementById('failed-questions-btn');
+    const failedQuestionsSection = document.getElementById('failed-questions-section');
+    const failedQuestionsList = document.getElementById('failed-questions-list');
+    const practiceFailedBtn = document.getElementById('practice-failed-btn');
+    const clearFailedBtn = document.getElementById('clear-failed-btn');
+    const backToQuizzesBtn = document.getElementById('back-to-quizzes-btn');
+
+    // Modal Functions
+    function openModal(modal) {
+      modal.classList.add('active');
+    }
+
+    function closeModal(modal) {
+      modal.classList.remove('active');
+    }
+
+    function closeAllModals() {
+      closeModal(loginModal);
+      closeModal(registerModal);
+    }
+
+    // Auth State Changes
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        loginButton.style.display = 'none';
+        registerButton.style.display = 'none';
+        guestButton.style.display = 'none';
+        userInfo.style.display = 'flex';
+
+        if (user.isAnonymous) {
+          userEmail.textContent = 'Guest User';
+        } else {
+          userEmail.textContent = user.email;
+
+          // Load failed questions for authenticated users
+          try {
+            await loadFailedQuestions(user.uid);
+          } catch (error) {
+            console.error("Error loading failed questions:", error);
+
+            // Try to load from local storage if Firebase fails
+            const localQuestions = getLocalFailedQuestions();
+            if (localQuestions && localQuestions.length > 0) {
+              displayFailedQuestions(localQuestions);
+              showToast('Loaded questions from local storage (offline mode)', 'info');
+            }
+          }
+        }
+
+        closeAllModals();
+      } else {
+        loginButton.style.display = 'block';
+        registerButton.style.display = 'block';
+        guestButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+        userInfo.style.display = 'none';
+
+        // Hide failed questions section
+        failedQuestionsSection.style.display = 'none';
+      }
+    });
+
+    // Event Listeners
+    loginButton.addEventListener('click', () => openModal(loginModal));
+    registerButton.addEventListener('click', () => openModal(registerModal));
+    toRegister.addEventListener('click', () => {
+      closeModal(loginModal);
+      openModal(registerModal);
+    });
+    toLogin.addEventListener('click', () => {
+      closeModal(registerModal);
+      openModal(loginModal);
+    });
+
+    closeButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const modal = e.target.closest('.modal-overlay');
+        closeModal(modal);
+      });
+    });
+
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        closeModal(e.target);
+      }
+    });
+
+    // Auth Functions
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-pass').value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast('Login successful!');
+      } catch (error) {
+        showToast('Login failed: ' + error.message, 'error');
+      }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-pass').value;
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        showToast('Account created successfully!');
+      } catch (error) {
+        showToast('Registration failed: ' + error.message, 'error');
+      }
+    });
+
+    logoutButton.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        showToast('Logged out successfully');
+      } catch (error) {
+        showToast('Logout failed: ' + error.message, 'error');
+      }
+    });
+
+    guestButton.addEventListener('click', async () => {
+      try {
+        await signInAnonymously(auth);
+        showToast('Logged in as guest');
+      } catch (error) {
+        showToast('Guest login failed: ' + error.message, 'error');
+      }
+    });
+
+    // User menu toggle
+    userMenuTrigger.addEventListener('click', () => {
+      const userMenu = userMenuTrigger.closest('.user-menu');
+      userMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.user-menu') && document.querySelector('.user-menu.active')) {
+        document.querySelector('.user-menu.active').classList.remove('active');
+      }
+    });
+
+    // Failed questions button
+    failedQuestionsBtn.addEventListener('click', () => {
+      showFailedQuestionsSection();
+    });
+
+    // User menu logout
+    userLogoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        showToast('Logged out successfully');
+      } catch (error) {
+        showToast('Logout failed: ' + error.message, 'error');
+      }
+    });
+
+    // Back to quizzes button
+    backToQuizzesBtn.addEventListener('click', () => {
+      failedQuestionsSection.style.display = 'none';
+      quizList.style.display = 'block';
+    });
+
+    // Practice failed questions
+    practiceFailedBtn.addEventListener('click', () => {
+      createFailedQuestionsQuiz();
+    });
+
+    // Clear failed questions
+    clearFailedBtn.addEventListener('click', async () => {
+      if (confirm('Are you sure you want to clear all failed questions?')) {
+        await clearAllFailedQuestions();
+      }
+    });
+
+    // Failed Questions Functions
+    async function loadFailedQuestions(userId) {
+      try {
+        const userDocRef = doc(db, 'users', userId);
+        const docSnap = await getDoc(userDocRef);
+
+        if (docSnap.exists() && docSnap.data().failedQuestions) {
+          const failedQuestions = docSnap.data().failedQuestions;
+          displayFailedQuestions(failedQuestions);
+
+          // Update local storage with the latest data
+          saveLocalFailedQuestions(failedQuestions);
+
+          return failedQuestions;
+        }
+        return getLocalFailedQuestions() || [];
+      } catch (error) {
+        console.error('Error loading failed questions:', error);
+
+        // Return local questions if available when offline
+        const localQuestions = getLocalFailedQuestions();
+        if (localQuestions) {
+          displayFailedQuestions(localQuestions);
+          return localQuestions;
+        }
+        return [];
+      }
+    }
+
+    function displayFailedQuestions(questions) {
+      // Clear existing items
+      failedQuestionsList.innerHTML = '';
+
+      if (questions.length === 0) {
+        failedQuestionsList.innerHTML = `
+          <li class="no-questions">
+            <p>You don't have any failed questions yet.</p>
+          </li>
+        `;
+        practiceFailedBtn.disabled = true;
+        clearFailedBtn.disabled = true;
+      } else {
+        practiceFailedBtn.disabled = false;
+        clearFailedBtn.disabled = false;
+
+        questions.forEach(question => {
+          const listItem = document.createElement('li');
+          listItem.className = 'failed-question-item';
+
+          listItem.innerHTML = `
+            <div class="failed-question-expression">${question.expression}</div>
+            <div class="failed-question-translation">${question.translation}</div>
+            <div class="failed-question-answers">
+              <div class="failed-question-wrong">
+                <i class="fas fa-times-circle"></i> ${question.selectedOption}
+              </div>
+              <div class="failed-question-correct">
+                <i class="fas fa-check-circle"></i> ${question.correctOption}
+              </div>
+            </div>
+          `;
+
+          failedQuestionsList.appendChild(listItem);
+        });
+      }
+    }
+
+    async function addFailedQuestion(question) {
+      if (!auth.currentUser || auth.currentUser.isAnonymous) return;
+
+      // Prepare the failed question data
+      const failedQuestion = {
+        id: question.id,
+        expression: question.expression,
+        translation: question.translation || question.expression_cn || '',
+        correctOption: question.options[question.correctIndex],
+        selectedOption: question.selectedOption,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        const userId = auth.currentUser.uid;
+        const userDocRef = doc(db, 'users', userId);
+
+        // Check if user document exists
+        const docSnap = await getDoc(userDocRef);
+
+        // Get current questions (either from Firestore or local storage)
+        let currentQuestions = [];
+        if (docSnap.exists() && docSnap.data().failedQuestions) {
+          currentQuestions = docSnap.data().failedQuestions;
+        } else {
+          currentQuestions = getLocalFailedQuestions() || [];
+        }
+
+        // Add new failed question, avoiding duplicates
+        const isDuplicate = currentQuestions.some(q => q.id === failedQuestion.id &&
+          q.selectedOption === failedQuestion.selectedOption);
+
+        if (!isDuplicate) {
+          // Add to current questions
+          currentQuestions.push(failedQuestion);
+
+          // Save to local storage in case we're offline
+          saveLocalFailedQuestions(currentQuestions);
+
+          // Try to update Firestore
+          try {
+            if (docSnap.exists()) {
+              // Update existing document with new failed question
+              await updateDoc(userDocRef, {
+                failedQuestions: arrayUnion(failedQuestion)
+              });
+            } else {
+              // Create new document with failed question
+              await setDoc(userDocRef, {
+                email: auth.currentUser.email,
+                failedQuestions: [failedQuestion]
+              });
+            }
+          } catch (error) {
+            // If Firestore update fails, we'll rely on local storage
+            console.warn('Storing failed question in local storage (offline mode)');
+          }
+        }
+
+        return true;
+      } catch (error) {
+        console.error('Error adding failed question:', error);
+
+        // Still try to save to local storage if Firestore fails
+        try {
+          const localQuestions = getLocalFailedQuestions() || [];
+          const isDuplicate = localQuestions.some(q => q.id === failedQuestion.id &&
+            q.selectedOption === failedQuestion.selectedOption);
+
+          if (!isDuplicate) {
+            localQuestions.push(failedQuestion);
+            saveLocalFailedQuestions(localQuestions);
+            console.log('Saved failed question to local storage');
+          }
+        } catch (localError) {
+          console.error('Error saving to local storage:', localError);
+        }
+
+        return false;
+      }
+    }
+
+    async function clearAllFailedQuestions() {
+      if (!auth.currentUser || auth.currentUser.isAnonymous) return;
+
+      try {
+        const userId = auth.currentUser.uid;
+        const userDocRef = doc(db, 'users', userId);
+
+        // Clear from Firestore
+        try {
+          await updateDoc(userDocRef, {
+            failedQuestions: []
+          });
+        } catch (error) {
+          console.warn('Could not clear questions from Firestore (possibly offline)');
+        }
+
+        // Clear from local storage
+        localStorage.removeItem(`${LOCAL_STORAGE_KEY}_${userId}`);
+
+        // Update display
+        displayFailedQuestions([]);
+        showToast('All failed questions cleared!');
+
+        return true;
+      } catch (error) {
+        console.error('Error clearing failed questions:', error);
+        showToast('Failed to clear questions: ' + error.message, 'error');
+        return false;
+      }
+    }
+
+    // Local storage helper functions
+    function saveLocalFailedQuestions(questions) {
+      if (!auth.currentUser || auth.currentUser.isAnonymous) return;
+
+      try {
+        const userId = auth.currentUser.uid;
+        localStorage.setItem(`${LOCAL_STORAGE_KEY}_${userId}`, JSON.stringify(questions));
+      } catch (error) {
+        console.error('Error saving to local storage:', error);
+      }
+    }
+
+    function getLocalFailedQuestions() {
+      if (!auth.currentUser || auth.currentUser.isAnonymous) return null;
+
+      try {
+        const userId = auth.currentUser.uid;
+        const storedData = localStorage.getItem(`${LOCAL_STORAGE_KEY}_${userId}`);
+        return storedData ? JSON.parse(storedData) : null;
+      } catch (error) {
+        console.error('Error reading from local storage:', error);
+        return null;
+      }
+    }
+
+    // Sync local questions with Firestore when connection is restored
+    function syncQuestionsWithFirestore() {
+      if (!auth.currentUser || auth.currentUser.isAnonymous) return;
+
+      const localQuestions = getLocalFailedQuestions();
+      if (!localQuestions || localQuestions.length === 0) return;
+
+      const userId = auth.currentUser.uid;
+      const userDocRef = doc(db, 'users', userId);
+
+      getDoc(userDocRef)
+        .then(docSnap => {
+          if (docSnap.exists()) {
+            return updateDoc(userDocRef, {
+              failedQuestions: localQuestions
+            });
+          } else {
+            return setDoc(userDocRef, {
+              email: auth.currentUser.email,
+              failedQuestions: localQuestions
+            });
+          }
+        })
+        .then(() => {
+          console.log('Successfully synced local questions with Firestore');
+        })
+        .catch(error => {
+          console.error('Error syncing with Firestore:', error);
+        });
+    }
+
+    // Check for online status and sync when online
+    window.addEventListener('online', () => {
+      showToast('You are back online!', 'success');
+      if (auth.currentUser && !auth.currentUser.isAnonymous) {
+        syncQuestionsWithFirestore();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      showToast('You are offline. Your progress will be saved locally.', 'info');
+    });
+
+    function showFailedQuestionsSection() {
+      quizList.style.display = 'none';
+      quizDetails.classList.add('hidden');
+      failedQuestionsSection.style.display = 'block';
+    }
+
+    async function createFailedQuestionsQuiz() {
+      if (!auth.currentUser || auth.currentUser.isAnonymous) return;
+
+      // Try to get questions from Firestore first, fallback to local storage
+      let failedQuestions;
+      try {
+        failedQuestions = await loadFailedQuestions(auth.currentUser.uid);
+      } catch (error) {
+        failedQuestions = getLocalFailedQuestions() || [];
+      }
+
+      if (failedQuestions.length === 0) {
+        showToast('No failed questions to practice', 'error');
+        return;
+      }
+
+      // Create a custom quiz from failed questions
+      const failedQuiz = {
+        id: 'failed-questions',
+        title: 'Practice Failed Questions',
+        description: 'A quiz created from your failed questions',
+        theme_color: '#e74c3c',
+        questions: failedQuestions.map(q => ({
+          id: q.id,
+          expression: q.expression,
+          translation: q.translation,
+          options: [q.correctOption],  // Start with correct option
+          correctIndex: 0
+        }))
+      };
+
+      // Add more options to each question
+      failedQuiz.questions.forEach(question => {
+        // Add 3 more random options from other questions
+        const otherOptions = failedQuestions
+          .filter(q => q.id !== question.id)
+          .map(q => q.correctOption)
+          .sort(() => 0.5 - Math.random()) // Shuffle
+          .slice(0, 3);
+
+        // Add the options and shuffle them
+        question.options = [...question.options, ...otherOptions];
+        const correctOption = question.options[0];
+
+        // Shuffle the options
+        question.options.sort(() => 0.5 - Math.random());
+
+        // Update the correct index
+        question.correctIndex = question.options.indexOf(correctOption);
+      });
+
+      // Load the custom quiz
+      failedQuestionsSection.style.display = 'none';
+
+      // Use the existing loadQuiz function
+      window.loadCustomQuiz(failedQuiz);
+    }
+
+    // Toast notification with a new 'info' type
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+
+      // Choose icon based on toast type
+      let icon = 'fa-check-circle';
+      if (type === 'error') icon = 'fa-exclamation-circle';
+      if (type === 'info') icon = 'fa-info-circle';
+
+      toast.innerHTML = `
+        <div class="toast-content">
+          <i class="fas ${icon}"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
+    // Export functions for use in scripts.js
+    window.addFailedQuestion = addFailedQuestion;
+  </script>
+
+  <script src="scripts.js"></script>
+
+  <style>
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      max-width: 350px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 9999;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.success {
+      background: linear-gradient(45deg, #28a745, #20c997);
+    }
+
+    .toast.error {
+      background: linear-gradient(45deg, #dc3545, #ff6b6b);
+    }
+
+    .toast.info {
+      background: linear-gradient(45deg, #17a2b8, #4cc9f0);
+    }
+
+    .toast-content {
+      display: flex;
+      align-items: center;
+    }
+
+    .toast-content i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Fix header layout */
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+  </style>
+</body>
+
+</html>
